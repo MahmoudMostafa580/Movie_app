@@ -81,6 +81,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         movieViewModel.getGenres();
         movieViewModel.getGenresLiveData().observe(getActivity(), new Observer<GenresResponse>() {
             @Override

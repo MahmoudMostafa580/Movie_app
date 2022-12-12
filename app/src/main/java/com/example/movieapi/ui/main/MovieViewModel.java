@@ -24,23 +24,38 @@ import retrofit2.Response;
 public class MovieViewModel extends AndroidViewModel {
     private MovieRepository movieRepository;
     private MutableLiveData<GenresResponse> genresMutableLiveData;
+    private MutableLiveData<MoviesResponse> popularMutableLiveData;
+    private MutableLiveData<MoviesResponse> searchMutableLiveData;
+    private MutableLiveData<MovieModel> detailsMutableLiveData;
+
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
         movieRepository=new MovieRepository(application);
-
     }
 
     public void getPopularMovies() {
+        popularMutableLiveData=movieRepository.getPopularLiveData();
         movieRepository.getPopularMovies();
+    }
+    public MutableLiveData<MoviesResponse> getPopularLiveData(){
+        return popularMutableLiveData;
     }
 
     public void searchMovie(String queue) {
+        searchMutableLiveData=movieRepository.searchMovieByNameLiveData();
         movieRepository.searchMovie(queue);
+    }
+    public MutableLiveData<MoviesResponse> searchMovieByNameLiveData(){
+        return searchMutableLiveData;
     }
 
     public void getMovieDetails(int id) {
+        detailsMutableLiveData=movieRepository.getDetailsLiveData();
         movieRepository.getMovieDetails(id);
+    }
+    public MutableLiveData<MovieModel> getDetailsLiveData(){
+        return detailsMutableLiveData;
     }
 
     public void getGenres(){

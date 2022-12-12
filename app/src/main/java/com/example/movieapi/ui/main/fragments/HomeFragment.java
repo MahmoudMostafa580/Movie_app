@@ -54,9 +54,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
 
+        movieViewModel.getGenres();
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -72,7 +73,7 @@ public class HomeFragment extends Fragment {
 
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new AllFragment()).commit();
 
-        authViewModel.getUserLiveData().observe(getActivity(), new Observer<FirebaseUser>() {
+        authViewModel.getUserLiveData().observe(getViewLifecycleOwner(), new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if (firebaseUser != null) {
@@ -81,13 +82,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-        movieViewModel.getGenres();
-        movieViewModel.getGenresLiveData().observe(getActivity(), new Observer<GenresResponse>() {
+        movieViewModel.getGenresLiveData().observe(requireActivity(), new Observer<GenresResponse>() {
             @Override
             public void onChanged(GenresResponse genresResponse) {
                 if (genresResponse != null) {
-                    getGenres(genresResponse);
+                    getGenres(inflater, genresResponse);
                 } else {
                     Log.v("GENRE ERROR:: ", "Error in loading genres!");
                 }
@@ -97,11 +96,11 @@ public class HomeFragment extends Fragment {
         return fragmentHomeBinding.getRoot();
     }
 
-    private void getGenres(GenresResponse genresResponse) {
+    private void getGenres(LayoutInflater inflater, GenresResponse genresResponse) {
         List<GenreModel> genresList = new ArrayList<>(genresResponse.getGenresList());
         if (!genresList.isEmpty()) {
             for (int i = 0; i <genresList.size() ; i++) {
-                chip = (Chip) getLayoutInflater().inflate(R.layout.chip_item, fragmentHomeBinding.categoriesChipGroup, false);
+                chip = (Chip) inflater.inflate(R.layout.chip_item, fragmentHomeBinding.categoriesChipGroup, false);
                 chip.setText(genresList.get(i).getName());
                 chip.setCheckable(true);
                 chip.setId(i);
@@ -118,5 +117,11 @@ public class HomeFragment extends Fragment {
                 .centerCrop()
                 .placeholder(R.drawable.ic_person)
                 .into(fragmentHomeBinding.userImg);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 }

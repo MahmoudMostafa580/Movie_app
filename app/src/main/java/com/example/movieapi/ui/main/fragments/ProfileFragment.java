@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        authViewModel=new ViewModelProvider(this).get(AuthViewModel.class);
+        authViewModel=new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         mSharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         editor = mSharedPreferences.edit();

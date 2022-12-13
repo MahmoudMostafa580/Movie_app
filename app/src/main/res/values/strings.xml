@@ -13,4 +13,8 @@
     <string name="confirm_password">Confirm password</string>
     <string name="sign_up">sign up</string>
     <string name="all">All</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="show_more">Show more</string>
+    <string name="upcoming_movies">Upcoming Movies</string>
+    <string name="top_rated">Top Rated</string>
 </resources>

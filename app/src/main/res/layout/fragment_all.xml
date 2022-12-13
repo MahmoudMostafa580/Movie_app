@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Most Popular"
+            android:text="@string/most_popular"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:text="Show more"
+            android:text="@string/show_more"
             app:layout_constraintBottom_toBottomOf="@id/popular_txt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"
@@ -52,11 +52,11 @@
 
 
         <TextView
-            android:id="@+id/latest_txt"
+            android:id="@+id/up_coming_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Latest Movies"
+            android:text="@string/upcoming_movies"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -64,20 +64,20 @@
             app:layout_constraintTop_toBottomOf="@id/popular_recycler" />
 
         <TextView
-            android:id="@+id/latest_see_more_txt"
+            android:id="@+id/up_coming_see_more_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:text="Show more"
-            app:layout_constraintBottom_toBottomOf="@id/latest_txt"
+            android:text="@string/show_more"
+            app:layout_constraintBottom_toBottomOf="@id/up_coming_txt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toEndOf="@id/latest_txt"
-            app:layout_constraintTop_toTopOf="@id/latest_txt" />
+            app:layout_constraintStart_toEndOf="@id/up_coming_txt"
+            app:layout_constraintTop_toTopOf="@id/up_coming_txt" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/latest_recycler"
+            android:id="@+id/up_coming_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -85,7 +85,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/latest_txt"
+            app:layout_constraintTop_toBottomOf="@id/up_coming_txt"
             tools:listitem="@layout/popular_list_item" />
 
 
@@ -94,12 +94,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Top Rated"
+            android:text="@string/top_rated"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/latest_recycler" />
+            app:layout_constraintTop_toBottomOf="@id/up_coming_recycler" />
 
         <TextView
             android:id="@+id/top_rated_see_more_txt"
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:text="Show more"
+            android:text="@string/show_more"
             app:layout_constraintBottom_toBottomOf="@id/top_rated_txt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"

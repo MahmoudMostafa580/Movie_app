@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,8 +25,6 @@ import java.util.List;
 
 public class AllFragment extends Fragment {
     FragmentAllBinding allBinding;
-    private MovieViewModel movieViewModel;
-    private PopularAdapter popularAdapter;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -49,42 +49,63 @@ public class AllFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
-        movieViewModel.getPopularMovies();
-
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
-    private void getPopularMovies(MoviesResponse moviesResponse) {
-        ArrayList<MovieModel> popularList = new ArrayList<>(moviesResponse.getMovies());
-        List<MovieModel> popularTemp;
-        if (!popularList.isEmpty()) {
-            popularTemp= popularList.subList(0,4);
-            allBinding.popularRecycler.setAdapter(popularAdapter);
-            allBinding.popularRecycler.setHasFixedSize(true);
-            allBinding.popularRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-            popularAdapter=new PopularAdapter(popularTemp);
+    private void loadMovies(MoviesResponse moviesResponse, RecyclerView recyclerView) {
+        ArrayList<MovieModel> list = new ArrayList<>(moviesResponse.getMovies());
+        List<MovieModel> listTemp;
+        if (!list.isEmpty()) {
+            listTemp= list.subList(0,4);
+            PopularAdapter popularAdapter = new PopularAdapter(listTemp);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+            recyclerView.setAdapter(popularAdapter);
+
         }
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         allBinding = FragmentAllBinding.inflate(inflater, container, false);
+
+        return allBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        MovieViewModel movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
+
+        //Get popular movies
         movieViewModel.getPopularMovies();
-        movieViewModel.getPopularLiveData().observe(requireActivity(), new Observer<MoviesResponse>() {
-            @Override
-            public void onChanged(MoviesResponse moviesResponse) {
-                if (moviesResponse != null) {
-                    getPopularMovies(moviesResponse);
-                }
+        movieViewModel.getPopularLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
+            if (moviesResponse != null) {
+                loadMovies(moviesResponse, allBinding.popularRecycler);
             }
         });
-        return allBinding.getRoot();
+
+        //Get upcoming movies
+        movieViewModel.getUpcomingMovies();
+        movieViewModel.getLatestLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
+            if (moviesResponse != null) {
+                loadMovies(moviesResponse, allBinding.upComingRecycler);
+            }
+        });
+
+        //Get Top-rated movies
+        movieViewModel.getTopRatedMovies();
+        movieViewModel.getTopRatedLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
+            if (moviesResponse!=null){
+                loadMovies(moviesResponse, allBinding.topRatedRecycler);
+            }
+        });
+
     }
 }

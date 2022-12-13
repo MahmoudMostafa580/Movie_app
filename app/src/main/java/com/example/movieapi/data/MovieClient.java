@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieClient {
 
-    private MovieInterface movieInterface;
+    private final MovieInterface movieInterface;
     private static MovieClient INSTANCE;
     MutableLiveData<MoviesResponse> mMovies;
 
@@ -42,6 +42,14 @@ public class MovieClient {
 
     public Call<MoviesResponse> getPopularMovies(){
         return movieInterface.getPopularMovies(Credentials.API_KEY);
+    }
+
+    public Call<MoviesResponse> getUpcomingMovies(){
+        return movieInterface.getUpcomingMovies(Credentials.API_KEY);
+    }
+
+    public Call<MoviesResponse> getTopRatedMovies(){
+        return movieInterface.getTopRatedMovies(Credentials.API_KEY);
     }
 
     public Call<MoviesResponse> SearchMovie(String queue){

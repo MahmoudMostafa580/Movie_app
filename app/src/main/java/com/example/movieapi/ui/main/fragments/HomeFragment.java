@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -32,7 +34,6 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding fragmentHomeBinding;
     private AuthViewModel authViewModel;
     private MovieViewModel movieViewModel;
-    private Chip chip;
 
 
     private String mParam1;
@@ -56,6 +57,8 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new AllFragment()).commit();
+
 
         movieViewModel.getGenres();
 
@@ -66,30 +69,22 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new AllFragment()).commit();
-
-        authViewModel.getUserLiveData().observe(getViewLifecycleOwner(), new Observer<FirebaseUser>() {
-            @Override
-            public void onChanged(FirebaseUser firebaseUser) {
-                if (firebaseUser != null) {
-                    getUserData(firebaseUser);
-                }
+        authViewModel.getUserLiveData().observe(getViewLifecycleOwner(), firebaseUser -> {
+            if (firebaseUser != null) {
+                getUserData(firebaseUser);
             }
         });
 
-        movieViewModel.getGenresLiveData().observe(requireActivity(), new Observer<GenresResponse>() {
-            @Override
-            public void onChanged(GenresResponse genresResponse) {
-                if (genresResponse != null) {
-                    getGenres(inflater, genresResponse);
-                } else {
-                    Log.v("GENRE ERROR:: ", "Error in loading genres!");
-                }
+        movieViewModel.getGenresLiveData().observe(requireActivity(), genresResponse -> {
+            if (genresResponse != null) {
+                getGenres(inflater, genresResponse);
+            } else {
+                Log.v("GENRE ERROR:: ", "Error in loading genres!");
             }
         });
 
@@ -100,7 +95,7 @@ public class HomeFragment extends Fragment {
         List<GenreModel> genresList = new ArrayList<>(genresResponse.getGenresList());
         if (!genresList.isEmpty()) {
             for (int i = 0; i <genresList.size() ; i++) {
-                chip = (Chip) inflater.inflate(R.layout.chip_item, fragmentHomeBinding.categoriesChipGroup, false);
+                Chip chip = (Chip) inflater.inflate(R.layout.chip_item, fragmentHomeBinding.categoriesChipGroup, false);
                 chip.setText(genresList.get(i).getName());
                 chip.setCheckable(true);
                 chip.setId(i);
@@ -111,17 +106,12 @@ public class HomeFragment extends Fragment {
 
     public void getUserData(FirebaseUser firebaseUser) {
         fragmentHomeBinding.userNameTxt.setText(firebaseUser.getDisplayName());
-        Glide.with(getActivity().getApplicationContext())
-                .load(firebaseUser.getPhotoUrl().toString())
+        Glide.with(requireActivity().getApplicationContext())
+                .load(Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .placeholder(R.drawable.ic_person)
                 .into(fragmentHomeBinding.userImg);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-    }
 }

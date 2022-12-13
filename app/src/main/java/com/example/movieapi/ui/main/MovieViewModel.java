@@ -22,11 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieViewModel extends AndroidViewModel {
-    private MovieRepository movieRepository;
-    private MutableLiveData<GenresResponse> genresMutableLiveData;
-    private MutableLiveData<MoviesResponse> popularMutableLiveData;
-    private MutableLiveData<MoviesResponse> searchMutableLiveData;
-    private MutableLiveData<MovieModel> detailsMutableLiveData;
+    private final MovieRepository movieRepository;
 
 
     public MovieViewModel(@NonNull Application application) {
@@ -35,34 +31,45 @@ public class MovieViewModel extends AndroidViewModel {
     }
 
     public void getPopularMovies() {
-        popularMutableLiveData=movieRepository.getPopularLiveData();
         movieRepository.getPopularMovies();
     }
     public MutableLiveData<MoviesResponse> getPopularLiveData(){
-        return popularMutableLiveData;
+        return movieRepository.getPopularLiveData();
+    }
+
+    public void getUpcomingMovies(){
+        movieRepository.getUpcomingMovies();
+    }
+    public LiveData<MoviesResponse> getLatestLiveData(){
+        return movieRepository.getUpcomingLiveData();
+    }
+
+    public void getTopRatedMovies(){
+        movieRepository.getTopRatedMovies();
+    }
+    public LiveData<MoviesResponse> getTopRatedLiveData(){
+        return movieRepository.getTopRatedLiveData();
     }
 
     public void searchMovie(String queue) {
-        searchMutableLiveData=movieRepository.searchMovieByNameLiveData();
         movieRepository.searchMovie(queue);
     }
     public MutableLiveData<MoviesResponse> searchMovieByNameLiveData(){
-        return searchMutableLiveData;
+        return movieRepository.searchMovieByNameLiveData();
     }
 
     public void getMovieDetails(int id) {
-        detailsMutableLiveData=movieRepository.getDetailsLiveData();
         movieRepository.getMovieDetails(id);
     }
     public MutableLiveData<MovieModel> getDetailsLiveData(){
-        return detailsMutableLiveData;
+
+        return movieRepository.getDetailsLiveData();
     }
 
     public void getGenres(){
-        genresMutableLiveData=movieRepository.getGenresLiveData();
         movieRepository.getGenres();
     }
     public MutableLiveData<GenresResponse> getGenresLiveData(){
-        return genresMutableLiveData;
+        return movieRepository.getGenresLiveData();
     }
 }

@@ -48,31 +48,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addFragmentsToBottomNav() {
-        mainBinding.bottomNav.setOnClickMenuListener(new Function1<MeowBottomNavigation.Model, Unit>() {
-            @Override
-            public Unit invoke(MeowBottomNavigation.Model model) {
-                switch (model.getId()) {
-                    case 1:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FavoriteFragment()).commit();
-                        break;
-                    case 2:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-                        break;
-                    case 3:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
-                        break;
-                }
-                return null;
+        mainBinding.bottomNav.setOnClickMenuListener(model -> {
+            switch (model.getId()) {
+                case 1:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FavoriteFragment()).commit();
+                    break;
+                case 2:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+                    break;
+                case 3:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+                    break;
+                default:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+                    break;
             }
+            return null;
         });
 
 
-        mainBinding.bottomNav.setOnReselectListener(new Function1<MeowBottomNavigation.Model, Unit>() {
-            @Override
-            public Unit invoke(MeowBottomNavigation.Model model) {
-                return null;
-            }
-        });
+        mainBinding.bottomNav.setOnReselectListener(model -> null);
     }
 
 

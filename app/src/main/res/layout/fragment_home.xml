@@ -1,142 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    android:orientation="vertical"
-    android:scrollbars="none"
+    android:padding="16dp"
     tools:context=".ui.main.fragments.HomeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/hi_tx"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_marginTop="8dp"
+        android:text="Hi, "
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/user_name_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/hi_tx"
+        app:layout_constraintStart_toEndOf="@id/hi_tx"
+        app:layout_constraintTop_toTopOf="@id/hi_tx" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/user_img"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:adjustViewBounds="true"
+        android:background="@color/white"
+        android:clickable="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/user_name_txt"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        app:srcCompat="@drawable/ic_person" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/search_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/chip_background_color"
+        app:cardCornerRadius="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_img">
 
         <TextView
-            android:id="@+id/hi_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="12dp"
+            android:layout_marginStart="16dp"
+            android:drawablePadding="16dp"
+            android:drawableTint="@color/white"
+            android:gravity="center_vertical"
+            android:text="Search your movie"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:drawableStartCompat="@drawable/ic_search" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/categories_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Categories"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_layout" />
+
+    <HorizontalScrollView
+        android:id="@+id/categories_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categories_txt">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/categories_chip_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Hi, "
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
+            app:checkedChip="@id/chip_all"
+            app:chipSpacing="4dp"
+            app:singleLine="true"
+            app:singleSelection="true">
 
-        <TextView
-            android:id="@+id/user_name_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/hi_tx"
-            app:layout_constraintStart_toEndOf="@id/hi_tx"
-            app:layout_constraintTop_toTopOf="@id/hi_tx" />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/user_img"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
-            android:adjustViewBounds="true"
-            android:background="@color/white"
-            android:clickable="true"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toEndOf="@id/user_name_txt"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
-            app:srcCompat="@drawable/ic_person" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/search_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/chip_background_color"
-            app:cardCornerRadius="28dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_img">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="12dp"
-                android:layout_marginStart="16dp"
-                android:drawablePadding="16dp"
-                android:drawableTint="@color/white"
-                android:gravity="center_vertical"
-                android:text="Search your movie"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:drawableStartCompat="@drawable/ic_search" />
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/categories_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Categories"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_layout" />
-
-        <HorizontalScrollView
-            android:id="@+id/categories_scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categories_txt">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/categories_chip_group"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_all"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:paddingHorizontal="4dp"
-                app:checkedChip="@id/chip_all"
-                app:chipSpacing="4dp"
-                app:singleLine="true"
-                app:singleSelection="true">
+                android:text="@string/all"
+                android:textColor="@drawable/chip_text"
+                app:chipBackgroundColor="@drawable/chip_selection" />
+        </com.google.android.material.chip.ChipGroup>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_all"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/all"
-                    android:textColor="@drawable/chip_text"
-                    app:chipBackgroundColor="@drawable/chip_selection" />
-            </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
 
-        </HorizontalScrollView>
+    <FrameLayout
+        android:id="@+id/categories_fragments_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categories_scroll_view"
+        app:layout_constraintVertical_bias="0" />
 
-        <FrameLayout
-            android:id="@+id/categories_fragments_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categories_scroll_view"
-            app:layout_constraintVertical_bias="0" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

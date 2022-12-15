@@ -102,7 +102,7 @@ public class ProfileFragment extends Fragment {
         profileBinding.userNameTxt.setText(firebaseUser.getDisplayName());
         profileBinding.userEmailTxt.setText(firebaseUser.getEmail());
         Log.v("PHOTO TAG: ", firebaseUser.getPhotoUrl().toString());
-        Glide.with(getActivity().getApplicationContext())
+        Glide.with(getContext())
                 .load(firebaseUser.getPhotoUrl().toString())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()

@@ -101,11 +101,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            Toast.makeText(getContext(), " orientation portrait", Toast.LENGTH_SHORT).show();
-            fragmentHomeBinding.scrollView.setVerticalScrollBarEnabled(false);
-        }
-
         return fragmentHomeBinding.getRoot();
     }
 

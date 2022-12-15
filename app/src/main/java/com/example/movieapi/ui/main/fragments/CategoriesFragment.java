@@ -1,5 +1,6 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import java.util.List;
 public class CategoriesFragment extends Fragment {
     FragmentCategoriesBinding categoriesBinding;
     MovieViewModel movieViewModel;
+    private GridLayoutManager gridLayoutManager;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -71,6 +73,7 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        gridLayoutManager=new GridLayoutManager(requireContext(), getResources().getInteger(R.integer.grid_column_count));
         movieViewModel=new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
         movieViewModel.getSelectedCategory().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
@@ -78,6 +81,13 @@ public class CategoriesFragment extends Fragment {
                 loadMovies(integer);
             }
         });
+
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        gridLayoutManager.setSpanCount(getResources().getInteger(R.integer.grid_column_count));
 
     }
 
@@ -98,7 +108,7 @@ public class CategoriesFragment extends Fragment {
             listTemp= list.subList(0,10);
             PopularAdapter popularAdapter = new PopularAdapter(listTemp, R.layout.movies_by_category_list_item);
             categoriesBinding.categoryMoviesList.setHasFixedSize(true);
-            categoriesBinding.categoryMoviesList.setLayoutManager(new GridLayoutManager(getContext(),2));
+            categoriesBinding.categoryMoviesList.setLayoutManager(gridLayoutManager);
             categoriesBinding.categoryMoviesList.setAdapter(popularAdapter);
 
         }

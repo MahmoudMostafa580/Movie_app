@@ -7,7 +7,7 @@
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
     android:background="@color/background_color"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/movie_img_card"

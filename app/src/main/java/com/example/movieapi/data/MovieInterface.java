@@ -13,11 +13,7 @@ import retrofit2.http.Query;
 
 public interface MovieInterface {
 
-    @GET("search/movie")
-    Call<MoviesResponse> searchMovie(
-            @Query("api_key") String key,
-            @Query("query") String query
-    );
+
 
     @GET("movie/popular")
     Call<MoviesResponse> getPopularMovies(@Query("api_key") String key);
@@ -36,4 +32,10 @@ public interface MovieInterface {
 
     @GET("genre/movie/list")
     Call<GenresResponse> getGenres(@Query("api_key") String key);
+
+    @GET("search/movie")
+    Call<MoviesResponse> searchMovie(
+            @Query("api_key") String key,
+            @Query("query") String query
+    );
 }

@@ -1,12 +1,11 @@
 package com.example.movieapi.ui.main.fragments;
 
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +18,7 @@ import com.example.movieapi.R;
 import com.example.movieapi.databinding.FragmentHomeBinding;
 import com.example.movieapi.pojo.GenreModel;
 import com.example.movieapi.pojo.GenresResponse;
+import com.example.movieapi.ui.search.SearchActivity;
 import com.example.movieapi.ui.login.AuthViewModel;
 import com.example.movieapi.ui.main.MovieViewModel;
 import com.google.android.material.chip.Chip;
@@ -99,6 +99,10 @@ public class HomeFragment extends Fragment {
             } else {
                 Log.v("GENRE ERROR:: ", "Error in loading genres!");
             }
+        });
+
+        fragmentHomeBinding.searchLayout.setOnClickListener(view -> {
+            startActivity(new Intent(getActivity(), SearchActivity.class));
         });
 
         return fragmentHomeBinding.getRoot();

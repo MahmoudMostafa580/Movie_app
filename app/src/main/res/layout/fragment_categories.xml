@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/popular_list_item"/>
+        tools:listitem="@layout/movies_by_category_list_item"/>
 
 </FrameLayout>

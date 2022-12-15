@@ -23,11 +23,19 @@ import retrofit2.Response;
 
 public class MovieViewModel extends AndroidViewModel {
     private final MovieRepository movieRepository;
+    private MutableLiveData<Integer> selectedCategoryLiveData=new MutableLiveData<>();
 
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
         movieRepository=new MovieRepository(application);
+    }
+
+    public void selectCategory(int categoryId){
+        selectedCategoryLiveData.setValue(categoryId);
+    }
+    public LiveData<Integer> getSelectedCategory(){
+        return selectedCategoryLiveData;
     }
 
     public void getPopularMovies() {
@@ -49,6 +57,13 @@ public class MovieViewModel extends AndroidViewModel {
     }
     public LiveData<MoviesResponse> getTopRatedLiveData(){
         return movieRepository.getTopRatedLiveData();
+    }
+
+    public void discoverMovies(int genreId){
+        movieRepository.discoverMovies(genreId);
+    }
+    public MutableLiveData<MoviesResponse> getDiscoverMoviesLiveData(){
+        return movieRepository.getDiscoverMoviesLiveData();
     }
 
     public void searchMovie(String queue) {

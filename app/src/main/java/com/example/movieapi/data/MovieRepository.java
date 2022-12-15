@@ -20,6 +20,7 @@ public class MovieRepository {
     private MutableLiveData<MoviesResponse> popularMutableLiveData;
     private MutableLiveData<MoviesResponse> upcomingMutableLiveData;
     private MutableLiveData<MoviesResponse> topRatedMutableLiveData;
+    private MutableLiveData<MoviesResponse> discoverMoviesLiveData;
     private MutableLiveData<MoviesResponse> searchMutableLiveData;
     private MutableLiveData<MovieModel> detailsMutableLiveData;
     private MutableLiveData<GenresResponse> genresMutableLiveData;
@@ -29,6 +30,7 @@ public class MovieRepository {
         this.popularMutableLiveData = new MutableLiveData<>();
         this.upcomingMutableLiveData = new MutableLiveData<>();
         this.topRatedMutableLiveData = new MutableLiveData<>();
+        this.discoverMoviesLiveData=new MutableLiveData<>();
         this.detailsMutableLiveData = new MutableLiveData<>();
         this.searchMutableLiveData = new MutableLiveData<>();
 
@@ -91,6 +93,26 @@ public class MovieRepository {
                 Log.e("TAG: ", "Error in response: " + t.getMessage());
             }
         });
+    }
+
+    public void discoverMovies(int genreId){
+        MovieClient.getINSTANCE().discoverMovies(genreId).enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if (response.code()==200 && response.isSuccessful()){
+                    discoverMoviesLiveData.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Log.e("TAG: ", "Error in response: " + t.getMessage());
+            }
+        });
+    }
+
+    public MutableLiveData<MoviesResponse> getDiscoverMoviesLiveData(){
+        return discoverMoviesLiveData;
     }
 
 

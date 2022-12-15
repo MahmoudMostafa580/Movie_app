@@ -52,6 +52,10 @@ public class MovieClient {
         return movieInterface.getTopRatedMovies(Credentials.API_KEY);
     }
 
+    public Call<MoviesResponse> discoverMovies(int genreId){
+        return movieInterface.discoverMovies(Credentials.API_KEY, genreId);
+    }
+
     public Call<MoviesResponse> SearchMovie(String queue){
         return movieInterface.searchMovie(Credentials.API_KEY, queue);
     }

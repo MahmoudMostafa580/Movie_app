@@ -28,6 +28,9 @@ public interface MovieInterface {
     @GET("movie/top_rated")
     Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String key);
 
+    @GET("discover/movie")
+    Call<MoviesResponse> discoverMovies(@Query("api_key") String key, @Query("with_genres") int genreId);
+
     @GET("movie/{id}")
     Call<MovieModel> getMovieDetails(@Path("id") int id, @Query("api_key") String key);
 

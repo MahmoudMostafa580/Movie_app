@@ -11,8 +11,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
+import com.example.movieapi.R;
 import com.example.movieapi.databinding.FragmentAllBinding;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
@@ -60,7 +63,7 @@ public class AllFragment extends Fragment {
         List<MovieModel> listTemp;
         if (!list.isEmpty()) {
             listTemp= list.subList(0,4);
-            PopularAdapter popularAdapter = new PopularAdapter(listTemp);
+            PopularAdapter popularAdapter = new PopularAdapter(listTemp, R.layout.popular_list_item);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(popularAdapter);

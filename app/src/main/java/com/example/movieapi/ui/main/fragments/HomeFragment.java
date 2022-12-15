@@ -1,15 +1,16 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -57,8 +58,8 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new AllFragment()).commit();
 
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new AllFragment()).commit();
 
         movieViewModel.getGenres();
 
@@ -74,6 +75,18 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
 
+        fragmentHomeBinding.categoriesChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == -1) {
+                fragmentHomeBinding.categoriesChipGroup.check(R.id.chip_all);
+            } else if (checkedId == R.id.chip_all) {
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new AllFragment()).commit();
+            } else {
+                group.check(checkedId);
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new CategoriesFragment()).commit();
+                movieViewModel.selectCategory(checkedId);
+            }
+        });
+
         authViewModel.getUserLiveData().observe(getViewLifecycleOwner(), firebaseUser -> {
             if (firebaseUser != null) {
                 getUserData(firebaseUser);
@@ -88,17 +101,22 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            Toast.makeText(getContext(), " orientation portrait", Toast.LENGTH_SHORT).show();
+            fragmentHomeBinding.scrollView.setVerticalScrollBarEnabled(false);
+        }
+
         return fragmentHomeBinding.getRoot();
     }
 
     private void getGenres(LayoutInflater inflater, GenresResponse genresResponse) {
         List<GenreModel> genresList = new ArrayList<>(genresResponse.getGenresList());
         if (!genresList.isEmpty()) {
-            for (int i = 0; i <genresList.size() ; i++) {
+            for (int i = 0; i < genresList.size(); i++) {
                 Chip chip = (Chip) inflater.inflate(R.layout.chip_item, fragmentHomeBinding.categoriesChipGroup, false);
                 chip.setText(genresList.get(i).getName());
                 chip.setCheckable(true);
-                chip.setId(i);
+                chip.setId(genresList.get(i).getId());
                 fragmentHomeBinding.categoriesChipGroup.addView(chip);
             }
         }
@@ -114,4 +132,10 @@ public class HomeFragment extends Fragment {
                 .into(fragmentHomeBinding.userImg);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+    }
 }

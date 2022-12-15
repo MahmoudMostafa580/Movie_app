@@ -20,16 +20,18 @@ import java.util.List;
 
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularViewHolder> {
     private List<MovieModel> mList;
+    private int resourceId;
 
-    public PopularAdapter(List<MovieModel> movieList) {
+    public PopularAdapter(List<MovieModel> movieList, int resourceId) {
         mList = movieList;
+        this.resourceId=resourceId;
     }
 
     @NonNull
     @Override
     public PopularViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new PopularViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.popular_list_item, parent, false));
+                .inflate(resourceId, parent, false));
     }
 
     @Override

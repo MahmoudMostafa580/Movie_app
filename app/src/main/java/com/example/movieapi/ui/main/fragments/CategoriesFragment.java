@@ -2,6 +2,9 @@ package com.example.movieapi.ui.main.fragments;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,22 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.SnapHelper;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.movieapi.R;
 import com.example.movieapi.databinding.FragmentCategoriesBinding;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
-import com.example.movieapi.ui.main.MovieViewModel;
+import com.example.movieapi.ui.MovieViewModel;
 import com.example.movieapi.ui.main.adapters.PopularAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -65,7 +60,7 @@ public class CategoriesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        categoriesBinding=FragmentCategoriesBinding.inflate(inflater, container, false);
+        categoriesBinding = FragmentCategoriesBinding.inflate(inflater, container, false);
 
         return categoriesBinding.getRoot();
     }
@@ -73,8 +68,8 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        gridLayoutManager=new GridLayoutManager(requireContext(), getResources().getInteger(R.integer.grid_column_count));
-        movieViewModel=new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
+        gridLayoutManager = new GridLayoutManager(requireContext(), getResources().getInteger(R.integer.grid_column_count));
+        movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
         movieViewModel.getSelectedCategory().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -102,11 +97,9 @@ public class CategoriesFragment extends Fragment {
     }
 
     private void prepareAdapter(MoviesResponse moviesResponse) {
-        ArrayList<MovieModel> list = new ArrayList<>(moviesResponse.getMovies());
-        List<MovieModel> listTemp;
+        List<MovieModel> list = moviesResponse.getMovies();
         if (!list.isEmpty()) {
-            listTemp= list.subList(0,10);
-            PopularAdapter popularAdapter = new PopularAdapter(listTemp, R.layout.movies_by_category_list_item);
+            PopularAdapter popularAdapter = new PopularAdapter(list, R.layout.movies_by_category_list_item);
             categoriesBinding.categoryMoviesList.setHasFixedSize(true);
             categoriesBinding.categoryMoviesList.setLayoutManager(gridLayoutManager);
             categoriesBinding.categoryMoviesList.setAdapter(popularAdapter);

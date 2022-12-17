@@ -17,4 +17,7 @@
     <string name="show_more">Show more</string>
     <string name="upcoming_movies">Upcoming Movies</string>
     <string name="top_rated">Top Rated</string>
+    <string name="hi">Hi,</string>
+    <string name="search_your_movie">Search your movie</string>
+    <string name="categories">Categories</string>
 </resources>

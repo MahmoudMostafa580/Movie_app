@@ -1,5 +1,6 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
 
 import com.example.movieapi.R;
 import com.example.movieapi.databinding.FragmentAllBinding;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
-import com.example.movieapi.ui.main.MovieViewModel;
+import com.example.movieapi.ui.MovieViewModel;
+import com.example.movieapi.ui.ShowMoreActivity;
 import com.example.movieapi.ui.main.adapters.PopularAdapter;
 
 import java.util.ArrayList;
@@ -28,6 +28,10 @@ import java.util.List;
 
 public class AllFragment extends Fragment {
     FragmentAllBinding allBinding;
+    MovieViewModel movieViewModel;
+    public static final String POPULAR_LIST_KEY = "popular";
+    public static final String UPCOMING_LIST_KEY = "upcoming";
+    public static final String TOP_RATED_LIST_KEY = "top-rated";
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -58,17 +62,18 @@ public class AllFragment extends Fragment {
         }
     }
 
-    private void loadMovies(MoviesResponse moviesResponse, RecyclerView recyclerView) {
-        ArrayList<MovieModel> list = new ArrayList<>(moviesResponse.getMovies());
+    private List<MovieModel> loadMovies(MoviesResponse moviesResponse, RecyclerView recyclerView) {
+        List<MovieModel> list = moviesResponse.getMovies();
         List<MovieModel> listTemp;
         if (!list.isEmpty()) {
-            listTemp= list.subList(0,4);
+            listTemp = list.subList(0, 4);
             PopularAdapter popularAdapter = new PopularAdapter(listTemp, R.layout.popular_list_item);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(popularAdapter);
 
         }
+        return list;
     }
 
 
@@ -77,6 +82,42 @@ public class AllFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         allBinding = FragmentAllBinding.inflate(inflater, container, false);
+        movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
+
+        allBinding.popularSeeMoreTxt.setOnClickListener(view -> {
+            movieViewModel.getPopularLiveData().observe(getViewLifecycleOwner(), new Observer<MoviesResponse>() {
+                @Override
+                public void onChanged(MoviesResponse moviesResponse) {
+                    ArrayList<MovieModel> list=new ArrayList<>(moviesResponse.getMovies());
+                    Intent intent=new Intent(getActivity(), ShowMoreActivity.class);
+                    intent.putParcelableArrayListExtra(POPULAR_LIST_KEY, list);
+                    startActivity(intent);
+                }
+            });
+        });
+        allBinding.upComingSeeMoreTxt.setOnClickListener(view -> {
+            movieViewModel.getUpcomingLiveData().observe(getViewLifecycleOwner(), new Observer<MoviesResponse>() {
+                @Override
+                public void onChanged(MoviesResponse moviesResponse) {
+                    ArrayList<MovieModel> list=new ArrayList<>(moviesResponse.getMovies());
+                    Intent intent=new Intent(getActivity(), ShowMoreActivity.class);
+                    intent.putParcelableArrayListExtra(UPCOMING_LIST_KEY, list);
+                    startActivity(intent);
+                }
+            });
+
+        });
+        allBinding.topRatedSeeMoreTxt.setOnClickListener(view -> {
+            movieViewModel.getTopRatedLiveData().observe(getViewLifecycleOwner(), new Observer<MoviesResponse>() {
+                @Override
+                public void onChanged(MoviesResponse moviesResponse) {
+                    ArrayList<MovieModel> list=new ArrayList<>(moviesResponse.getMovies());
+                    Intent intent=new Intent(getActivity(), ShowMoreActivity.class);
+                    intent.putParcelableArrayListExtra(TOP_RATED_LIST_KEY, list);
+                    startActivity(intent);
+                }
+            });
+        });
 
         return allBinding.getRoot();
     }
@@ -84,19 +125,19 @@ public class AllFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MovieViewModel movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
 
         //Get popular movies
         movieViewModel.getPopularMovies();
         movieViewModel.getPopularLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
             if (moviesResponse != null) {
                 loadMovies(moviesResponse, allBinding.popularRecycler);
+
             }
         });
 
         //Get upcoming movies
         movieViewModel.getUpcomingMovies();
-        movieViewModel.getLatestLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
+        movieViewModel.getUpcomingLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
             if (moviesResponse != null) {
                 loadMovies(moviesResponse, allBinding.upComingRecycler);
             }
@@ -105,7 +146,7 @@ public class AllFragment extends Fragment {
         //Get Top-rated movies
         movieViewModel.getTopRatedMovies();
         movieViewModel.getTopRatedLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
-            if (moviesResponse!=null){
+            if (moviesResponse != null) {
                 loadMovies(moviesResponse, allBinding.topRatedRecycler);
             }
         });

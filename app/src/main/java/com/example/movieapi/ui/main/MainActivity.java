@@ -1,27 +1,17 @@
 package com.example.movieapi.ui.main;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.movieapi.R;
 import com.example.movieapi.databinding.ActivityMainBinding;
-import com.example.movieapi.pojo.MovieModel;
-import com.example.movieapi.pojo.MoviesResponse;
+import com.example.movieapi.ui.MovieViewModel;
 import com.example.movieapi.ui.main.fragments.FavoriteFragment;
 import com.example.movieapi.ui.main.fragments.HomeFragment;
 import com.example.movieapi.ui.main.fragments.ProfileFragment;
-import com.example.movieapi.ui.main.fragments.SearchFragment;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class MainActivity extends AppCompatActivity {
 

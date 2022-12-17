@@ -20,7 +20,7 @@ import com.example.movieapi.pojo.GenreModel;
 import com.example.movieapi.pojo.GenresResponse;
 import com.example.movieapi.ui.search.SearchActivity;
 import com.example.movieapi.ui.login.AuthViewModel;
-import com.example.movieapi.ui.main.MovieViewModel;
+import com.example.movieapi.ui.MovieViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment {
         fragmentHomeBinding.categoriesChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == -1) {
                 fragmentHomeBinding.categoriesChipGroup.check(R.id.chip_all);
+                fragmentHomeBinding.categoriesScrollView.smoothScrollTo(0,0);
             } else if (checkedId == R.id.chip_all) {
                 requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new AllFragment()).commit();
             } else {

@@ -1,6 +1,11 @@
 package com.example.movieapi.pojo;
 
-public class MovieModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class MovieModel implements Parcelable {
     private String poster_path;
     private String overView;
     private String release_date;
@@ -16,6 +21,27 @@ public class MovieModel {
         this.poster_path = poster_path;
         this.release_date = release_date;
     }
+
+    protected MovieModel(Parcel in) {
+        poster_path = in.readString();
+        overView = in.readString();
+        release_date = in.readString();
+        id = in.readInt();
+        title = in.readString();
+        vote_average = in.readFloat();
+    }
+
+    public static final Creator<MovieModel> CREATOR = new Creator<MovieModel>() {
+        @Override
+        public MovieModel createFromParcel(Parcel in) {
+            return new MovieModel(in);
+        }
+
+        @Override
+        public MovieModel[] newArray(int size) {
+            return new MovieModel[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -41,4 +67,18 @@ public class MovieModel {
         return release_date;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(poster_path);
+        parcel.writeString(overView);
+        parcel.writeString(release_date);
+        parcel.writeInt(id);
+        parcel.writeString(title);
+        parcel.writeFloat(vote_average);
+    }
 }

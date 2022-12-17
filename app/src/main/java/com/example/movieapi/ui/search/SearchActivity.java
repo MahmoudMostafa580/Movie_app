@@ -9,13 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.example.movieapi.databinding.ActivitySearchBinding;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
-import com.example.movieapi.ui.main.MovieViewModel;
+import com.example.movieapi.ui.MovieViewModel;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.movieapi.ui.main;
+package com.example.movieapi.ui;
 
 import android.app.Application;
 import android.util.Log;
@@ -24,6 +24,7 @@ import retrofit2.Response;
 public class MovieViewModel extends AndroidViewModel {
     private final MovieRepository movieRepository;
     private MutableLiveData<Integer> selectedCategoryLiveData=new MutableLiveData<>();
+    private MutableLiveData<List<MovieModel>> movieListLiveData=new MutableLiveData<>();
 
 
     public MovieViewModel(@NonNull Application application) {
@@ -48,7 +49,7 @@ public class MovieViewModel extends AndroidViewModel {
     public void getUpcomingMovies(){
         movieRepository.getUpcomingMovies();
     }
-    public LiveData<MoviesResponse> getLatestLiveData(){
+    public LiveData<MoviesResponse> getUpcomingLiveData(){
         return movieRepository.getUpcomingLiveData();
     }
 

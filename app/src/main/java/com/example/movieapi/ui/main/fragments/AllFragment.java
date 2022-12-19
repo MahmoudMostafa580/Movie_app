@@ -18,6 +18,7 @@ import com.example.movieapi.R;
 import com.example.movieapi.databinding.FragmentAllBinding;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
+import com.example.movieapi.ui.movieDetails.MovieDetailsActivity;
 import com.example.movieapi.ui.MovieViewModel;
 import com.example.movieapi.ui.ShowMoreActivity;
 import com.example.movieapi.ui.main.adapters.PopularAdapter;
@@ -62,7 +63,7 @@ public class AllFragment extends Fragment {
         }
     }
 
-    private List<MovieModel> loadMovies(MoviesResponse moviesResponse, RecyclerView recyclerView) {
+    private void loadMovies(MoviesResponse moviesResponse, RecyclerView recyclerView) {
         List<MovieModel> list = moviesResponse.getMovies();
         List<MovieModel> listTemp;
         if (!list.isEmpty()) {
@@ -71,9 +72,17 @@ public class AllFragment extends Fragment {
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             recyclerView.setAdapter(popularAdapter);
+            popularAdapter.setOnItemClickListener(new PopularAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    int mPosition = listTemp.get(position).getId();
+                    Intent intent=new Intent(requireActivity(), MovieDetailsActivity.class);
+                    intent.putExtra("MOVIE_POSITION", mPosition);
+                    startActivity(intent);
+                }
+            });
 
         }
-        return list;
     }
 
 

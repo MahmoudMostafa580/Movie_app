@@ -7,28 +7,31 @@ import java.io.Serializable;
 
 public class MovieModel implements Parcelable {
     private String poster_path;
-    private String overView;
+    private String overview;
     private String release_date;
     private int id;
     private String title;
     private float vote_average;
+    private int runtime;
 
-    public MovieModel(String title, int id, String overView, float vote_average, String poster_path, String release_date) {
+    public MovieModel(String title, int id, String overView, float vote_average, String poster_path, String release_date, int runtime) {
         this.title = title;
         this.id = id;
-        this.overView = overView;
+        this.overview = overView;
         this.vote_average = vote_average;
         this.poster_path = poster_path;
         this.release_date = release_date;
+        this.runtime=runtime;
     }
 
     protected MovieModel(Parcel in) {
         poster_path = in.readString();
-        overView = in.readString();
+        overview = in.readString();
         release_date = in.readString();
         id = in.readInt();
         title = in.readString();
         vote_average = in.readFloat();
+        runtime = in.readInt();
     }
 
     public static final Creator<MovieModel> CREATOR = new Creator<MovieModel>() {
@@ -52,7 +55,7 @@ public class MovieModel implements Parcelable {
     }
 
     public String getOverView() {
-        return overView;
+        return overview;
     }
 
     public float getVote_average() {
@@ -67,6 +70,10 @@ public class MovieModel implements Parcelable {
         return release_date;
     }
 
+    public int getRuntime() {
+        return runtime;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -75,10 +82,11 @@ public class MovieModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(poster_path);
-        parcel.writeString(overView);
+        parcel.writeString(overview);
         parcel.writeString(release_date);
         parcel.writeInt(id);
         parcel.writeString(title);
         parcel.writeFloat(vote_average);
+        parcel.writeInt(runtime);
     }
 }

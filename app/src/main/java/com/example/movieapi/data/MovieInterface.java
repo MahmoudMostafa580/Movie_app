@@ -1,5 +1,6 @@
 package com.example.movieapi.data;
 
+import com.example.movieapi.pojo.CastResponse;
 import com.example.movieapi.pojo.GenresResponse;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
@@ -25,10 +26,16 @@ public interface MovieInterface {
     Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String key);
 
     @GET("discover/movie")
-    Call<MoviesResponse> discoverMovies(@Query("api_key") String key, @Query("with_genres") int genreId);
+    Call<MoviesResponse> discoverMovies(
+            @Query("api_key") String key,
+            @Query("with_genres") int genreId
+    );
 
     @GET("movie/{id}")
-    Call<MovieModel> getMovieDetails(@Path("id") int id, @Query("api_key") String key);
+    Call<MovieModel> getMovieDetails(
+            @Path("id") int id,
+            @Query("api_key") String key
+    );
 
     @GET("genre/movie/list")
     Call<GenresResponse> getGenres(@Query("api_key") String key);
@@ -38,4 +45,17 @@ public interface MovieInterface {
             @Query("api_key") String key,
             @Query("query") String query
     );
+
+    @GET("movie/{movie_id}/credits")
+    Call<CastResponse> getMovieCast(
+            @Path("movie_id") int id,
+            @Query("api_key") String key
+    );
+
+    @GET("movie/{movie_id}/similar")
+    Call<MoviesResponse> getSimilarMovies(
+        @Path("movie_id") int id,
+        @Query("api_key") String key
+    );
+
 }

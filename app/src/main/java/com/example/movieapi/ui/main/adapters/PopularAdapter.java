@@ -21,6 +21,7 @@ import java.util.List;
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularViewHolder> {
     private List<MovieModel> mList;
     private int resourceId;
+    private OnItemClickListener mListener;
 
     public PopularAdapter(List<MovieModel> movieList, int resourceId) {
         mList = movieList;
@@ -31,7 +32,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
     @Override
     public PopularViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new PopularViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(resourceId, parent, false));
+                .inflate(resourceId, parent, false), mListener);
     }
 
     @Override
@@ -59,16 +60,35 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
         return mList.size();
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener=listener;
+    }
+
     public static class PopularViewHolder extends RecyclerView.ViewHolder {
         ImageView movieImg;
         TextView movieName;
         RatingBar movieRate;
 
-        public PopularViewHolder(@NonNull View itemView) {
+        public PopularViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             movieImg = itemView.findViewById(R.id.movie_img);
             movieName = itemView.findViewById(R.id.movie_title_txt);
             movieRate = itemView.findViewById(R.id.movie_rating_bar);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(listener!=null){
+                        int position=getAdapterPosition();
+                        if (position!=RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
+
+    }
+    public interface OnItemClickListener{
+        void onItemClick(int position);
     }
 }

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.movieapi.pojo.CastResponse;
 import com.example.movieapi.pojo.GenresResponse;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
@@ -24,6 +25,8 @@ public class MovieRepository {
     private MutableLiveData<MoviesResponse> searchMutableLiveData;
     private MutableLiveData<MovieModel> detailsMutableLiveData;
     private MutableLiveData<GenresResponse> genresMutableLiveData;
+    private MutableLiveData<CastResponse> castMutableLiveData;
+    private MutableLiveData<MoviesResponse> similarMoviesLiveData;
 
     public MovieRepository(Application application) {
         this.genresMutableLiveData = new MutableLiveData<>();
@@ -33,7 +36,8 @@ public class MovieRepository {
         this.discoverMoviesLiveData=new MutableLiveData<>();
         this.detailsMutableLiveData = new MutableLiveData<>();
         this.searchMutableLiveData = new MutableLiveData<>();
-
+        this.castMutableLiveData=new MutableLiveData<>();
+        this.similarMoviesLiveData=new MutableLiveData<>();
     }
 
 
@@ -78,7 +82,6 @@ public class MovieRepository {
     public LiveData<MoviesResponse> getTopRatedLiveData() {
         return topRatedMutableLiveData;
     }
-
     public void getTopRatedMovies() {
         MovieClient.getINSTANCE().getTopRatedMovies().enqueue(new Callback<MoviesResponse>() {
             @Override
@@ -110,7 +113,6 @@ public class MovieRepository {
             }
         });
     }
-
     public MutableLiveData<MoviesResponse> getDiscoverMoviesLiveData(){
         return discoverMoviesLiveData;
     }
@@ -119,7 +121,6 @@ public class MovieRepository {
     public MutableLiveData<MoviesResponse> searchMovieByNameLiveData() {
         return searchMutableLiveData;
     }
-
     public void searchMovie(String queue) {
         MovieClient.getINSTANCE().SearchMovie(queue).enqueue(new Callback<MoviesResponse>() {
             @Override
@@ -139,7 +140,6 @@ public class MovieRepository {
     public MutableLiveData<MovieModel> getDetailsLiveData() {
         return detailsMutableLiveData;
     }
-
     public void getMovieDetails(int id) {
         MovieClient.getINSTANCE().getMovieDetails(id).enqueue(new Callback<MovieModel>() {
             @Override
@@ -157,7 +157,6 @@ public class MovieRepository {
     public MutableLiveData<GenresResponse> getGenresLiveData() {
         return genresMutableLiveData;
     }
-
     public void getGenres() {
         MovieClient.getINSTANCE().getGenres().enqueue(new Callback<GenresResponse>() {
             @Override
@@ -175,4 +174,41 @@ public class MovieRepository {
     }
 
 
+    public void getMovieCast(int id){
+        MovieClient.getINSTANCE().getMovieCast(id).enqueue(new Callback<CastResponse>() {
+            @Override
+            public void onResponse(Call<CastResponse> call, Response<CastResponse> response) {
+                if (response.isSuccessful() && response.code()==200){
+                    castMutableLiveData.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CastResponse> call, Throwable t) {
+                Log.v("TAG RESPONSE", t.getMessage());
+            }
+        });
+    }
+    public LiveData<CastResponse> getCastLiveData(){
+        return castMutableLiveData;
+    }
+
+    public void getSimilarMovies(int movieId){
+        MovieClient.getINSTANCE().getSimilarMovies(movieId).enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if (response.isSuccessful() && response.code()==200){
+                    similarMoviesLiveData.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Log.v("ERROR TAG: ", t.getMessage());
+            }
+        });
+    }
+    public MutableLiveData<MoviesResponse> getSimilarMoviesLiveData(){
+        return similarMoviesLiveData;
+    }
 }

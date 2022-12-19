@@ -127,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Release date"
+                android:text="@string/release_date"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/movie_title"
@@ -148,14 +148,32 @@
                 android:id="@+id/genre_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Genres"
+                android:text="@string/genres"
+                android:layout_marginTop="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/release_date_txt"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.3"
-                app:layout_constraintStart_toEndOf="@id/release_date_txt"
-                app:layout_constraintTop_toTopOf="@id/release_date_txt" />
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/release_date_txt"
+                app:layout_constraintTop_toBottomOf="@id/release_date_value" />
+            <LinearLayout
+                android:id="@+id/genre_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/genre_txt"
+                app:layout_constraintTop_toBottomOf="@id/genre_txt"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent">
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/genres_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="false"
+                    app:chipSpacingVertical="1dp"
+                    app:selectionRequired="false"
+                    app:layout_constraintHorizontal_bias="0" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/over_view_txt"
@@ -168,7 +186,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/release_date_value"
+                app:layout_constraintTop_toBottomOf="@id/genre_layout"
                 tools:text="Deep inside the mountain of Dovre, something gigantic awakens after being
 trapped for a thousand years. Destroying everything in its path, the creature is fast
 approaching the capital of Norway. But how do you stop something you thought only existed in Norwegian folklore?" />
@@ -179,7 +197,7 @@ approaching the capital of Norway. But how do you stop something you thought onl
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Cast"
+                android:text="@string/cast"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -206,7 +224,7 @@ approaching the capital of Norway. But how do you stop something you thought onl
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Similar Movies"
+                android:text="@string/similar_movies"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"

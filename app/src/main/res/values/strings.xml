@@ -20,4 +20,8 @@
     <string name="hi">Hi,</string>
     <string name="search_your_movie">Search your movie</string>
     <string name="categories">Categories</string>
+    <string name="cast">Cast</string>
+    <string name="similar_movies">Similar Movies</string>
+    <string name="genres">Genres</string>
+    <string name="release_date">Release date</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,17 +25,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class ProfileFragment extends Fragment {
-
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private FragmentProfileBinding profileBinding;
     private AuthViewModel authViewModel;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor editor;
 
-    private String mParam1;
-    private String mParam2;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -41,16 +37,13 @@ public class ProfileFragment extends Fragment {
 
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         authViewModel=new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         mSharedPreferences = getActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
@@ -68,10 +61,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -81,11 +70,9 @@ public class ProfileFragment extends Fragment {
         profileBinding = FragmentProfileBinding.inflate(inflater, container, false);
 
         profileBinding.logOutBtn.setOnClickListener(view -> {
-            authViewModel.logOut();
-            editor.putBoolean("is_logged", false);
-            editor.apply();
+            showDialog();
         });
-        authViewModel.getUserLiveData().observe(getActivity(), new Observer<FirebaseUser>() {
+        authViewModel.getUserLiveData().observe(getViewLifecycleOwner(), new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if (firebaseUser!=null){
@@ -98,11 +85,28 @@ public class ProfileFragment extends Fragment {
         });
         return profileBinding.getRoot();
     }
+
+    private void showDialog() {
+        AlertDialog.Builder builder=new AlertDialog.Builder(requireActivity())
+                .setTitle("Logout")
+                .setMessage("Are you sure to logout?")
+                .setIcon(R.drawable.ic_warning)
+                .setPositiveButton("Logout", (dialogInterface, i) -> {
+                    authViewModel.logOut();
+                    editor.putBoolean("is_logged", false);
+                    editor.apply();
+                })
+                .setNegativeButton("Cancel", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                });
+        builder.show();
+    }
+
     public void getUserData(FirebaseUser firebaseUser){
         profileBinding.userNameTxt.setText(firebaseUser.getDisplayName());
         profileBinding.userEmailTxt.setText(firebaseUser.getEmail());
         Log.v("PHOTO TAG: ", firebaseUser.getPhotoUrl().toString());
-        Glide.with(getContext())
+        Glide.with(requireActivity())
                 .load(firebaseUser.getPhotoUrl().toString())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()

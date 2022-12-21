@@ -56,6 +56,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
 

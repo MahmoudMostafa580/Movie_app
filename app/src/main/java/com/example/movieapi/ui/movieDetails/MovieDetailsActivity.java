@@ -48,8 +48,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
 
         Intent intent=getIntent();
-        if (intent.hasExtra("MOVIE_POSITION")){
-            int movieId = intent.getIntExtra("MOVIE_POSITION", 0);
+        if (intent.hasExtra("MOVIE_ID")){
+            int movieId = intent.getIntExtra("MOVIE_ID", 0);
             if (movieId!=0){
                 loadMovieDetails(movieId);
             }else{

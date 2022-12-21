@@ -1,5 +1,6 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
 import com.example.movieapi.ui.MovieViewModel;
 import com.example.movieapi.ui.main.adapters.PopularAdapter;
+import com.example.movieapi.ui.movieDetails.MovieDetailsActivity;
 
 import java.util.List;
 
@@ -103,7 +105,15 @@ public class CategoriesFragment extends Fragment {
             categoriesBinding.categoryMoviesList.setHasFixedSize(true);
             categoriesBinding.categoryMoviesList.setLayoutManager(gridLayoutManager);
             categoriesBinding.categoryMoviesList.setAdapter(popularAdapter);
-
+            popularAdapter.setOnItemClickListener(new PopularAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    int id = list.get(position).getId();
+                    Intent intent = new Intent(requireActivity(), MovieDetailsActivity.class);
+                    intent.putExtra("MOVIE_ID", id);
+                    startActivity(intent);
+                }
+            });
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -15,6 +16,7 @@ import com.example.movieapi.databinding.ActivitySearchBinding;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
 import com.example.movieapi.ui.MovieViewModel;
+import com.example.movieapi.ui.movieDetails.MovieDetailsActivity;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,7 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView.ItemDecoration itemDecoration=new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         searchBinding.searchResultList.addItemDecoration(itemDecoration);
         setupSearchMovie();
+
     }
 
     private void setupSearchMovie() {
@@ -59,6 +62,15 @@ public class SearchActivity extends AppCompatActivity {
                         public void onChanged(MoviesResponse moviesResponse) {
                             if (!moviesResponse.getMovies().isEmpty()){
                                 searchAdapter.setList((ArrayList<MovieModel>) moviesResponse.getMovies());
+                                searchAdapter.setOnItemClickListener(new SearchResultAdapter.OnSearchItemClickListener() {
+                                    @Override
+                                    public void onSearchItemClick(int position) {
+                                        int id = moviesResponse.getMovies().get(position).getId();
+                                        Intent intent=new Intent(SearchActivity.this, MovieDetailsActivity.class);
+                                        intent.putExtra("MOVIE_ID", id);
+                                        startActivity(intent);
+                                    }
+                                });
                             }
                         }
                     });
@@ -78,6 +90,15 @@ public class SearchActivity extends AppCompatActivity {
                         public void onChanged(MoviesResponse moviesResponse) {
                             if (!moviesResponse.getMovies().isEmpty()){
                                 searchAdapter.setList((ArrayList<MovieModel>) moviesResponse.getMovies());
+                                searchAdapter.setOnItemClickListener(new SearchResultAdapter.OnSearchItemClickListener() {
+                                    @Override
+                                    public void onSearchItemClick(int position) {
+                                        int id = moviesResponse.getMovies().get(position).getId();
+                                        Intent intent=new Intent(SearchActivity.this, MovieDetailsActivity.class);
+                                        intent.putExtra("MOVIE_ID", id);
+                                        startActivity(intent);
+                                    }
+                                });
                             }
                         }
                     });

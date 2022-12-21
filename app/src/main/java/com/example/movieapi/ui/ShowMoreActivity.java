@@ -16,6 +16,8 @@ import com.example.movieapi.databinding.ActivityShowMoreBinding;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.ui.main.adapters.PopularAdapter;
 import com.example.movieapi.ui.main.fragments.AllFragment;
+import com.example.movieapi.ui.movieDetails.MovieDetailsActivity;
+import com.example.movieapi.ui.search.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,5 +69,11 @@ public class ShowMoreActivity extends AppCompatActivity {
         showMoreBinding.intentResultList.setHasFixedSize(true);
         showMoreBinding.intentResultList.setLayoutManager(gridLayoutManager);
         showMoreBinding.intentResultList.setAdapter(popularAdapter);
+        popularAdapter.setOnItemClickListener(position -> {
+            int id = list.get(position).getId();
+            Intent intent=new Intent(ShowMoreActivity.this, MovieDetailsActivity.class);
+            intent.putExtra("MOVIE_ID", id);
+            startActivity(intent);
+        });
     }
 }

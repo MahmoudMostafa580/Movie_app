@@ -75,9 +75,9 @@ public class AllFragment extends Fragment {
             popularAdapter.setOnItemClickListener(new PopularAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
-                    int mPosition = listTemp.get(position).getId();
+                    int id = listTemp.get(position).getId();
                     Intent intent=new Intent(requireActivity(), MovieDetailsActivity.class);
-                    intent.putExtra("MOVIE_POSITION", mPosition);
+                    intent.putExtra("MOVIE_ID", id);
                     startActivity(intent);
                 }
             });

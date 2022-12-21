@@ -194,7 +194,7 @@
             android:id="@+id/log_out_btn"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="120dp"
             android:text="log out"
             android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -204,7 +204,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/favorite_card"
+            app:layout_constraintTop_toBottomOf="@id/last_visited_card"
             app:layout_constraintVertical_bias="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

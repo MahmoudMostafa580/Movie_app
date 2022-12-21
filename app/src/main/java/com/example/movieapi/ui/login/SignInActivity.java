@@ -20,9 +20,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends AppCompatActivity {
     public ActivitySignInBinding signInBinding;
-    private FirebaseAuth mFirebaseAuth; //
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor editor;
     private AuthViewModel authViewModel;
 
 
@@ -31,10 +28,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         signInBinding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(signInBinding.getRoot());
-        mFirebaseAuth = FirebaseAuth.getInstance(); //
 
-        mSharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-        editor = mSharedPreferences.edit();
 
         authViewModel=new ViewModelProvider(this).get(AuthViewModel.class);
 
@@ -42,6 +36,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if (firebaseUser!=null){
+                    loading(false);
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }
@@ -54,8 +49,7 @@ public class SignInActivity extends AppCompatActivity {
             if (isValidData(email, password)) {
                 loading(true);
                 authViewModel.signIn(email, password);
-                editor.putBoolean("is_logged", true);
-                editor.apply();
+
             }else{
                 loading(false);
             }
@@ -122,23 +116,6 @@ public class SignInActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-    public void signIn(String email, String password) {
-        loading(true);
-        mFirebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        loading(false);
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        editor.putBoolean("is_logged", true);
-                        editor.apply();
-                        finish();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    loading(false);
-                    showToast(e.getMessage());
-                });
     }
 
     public boolean isValidData(String email, String password) {

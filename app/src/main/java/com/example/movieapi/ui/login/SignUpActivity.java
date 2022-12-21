@@ -30,10 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
     ActivitySignUpBinding signUpBinding;
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri profileImage;
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor editor;
     private AuthViewModel authViewModel;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +38,6 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBinding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(signUpBinding.getRoot());
 
-        mSharedPreferences=getSharedPreferences("user_data", MODE_PRIVATE);
-        editor=mSharedPreferences.edit();
 
         authViewModel=new ViewModelProvider(this).get(AuthViewModel.class);
 
@@ -50,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if (firebaseUser!=null){
+                    loading(false);
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }
@@ -71,8 +67,7 @@ public class SignUpActivity extends AppCompatActivity {
             if (isValidData(name, email, password)) {
                 loading(true);
                 authViewModel.signUp(name, email,password,profileImage);
-                editor.putBoolean("is_logged", true);
-                editor.apply();
+
             } else {
                 loading(false);
             }

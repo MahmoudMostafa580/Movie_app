@@ -97,6 +97,7 @@
             app:layout_constraintStart_toEndOf="@id/change_user_name_btn"
             app:layout_constraintTop_toBottomOf="@id/user_email_txt" />
 
+
         <androidx.cardview.widget.CardView
             android:id="@+id/favorite_card"
             android:layout_width="match_parent"

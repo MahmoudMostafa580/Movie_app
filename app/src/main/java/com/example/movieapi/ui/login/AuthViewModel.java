@@ -30,6 +30,12 @@ public class AuthViewModel extends AndroidViewModel {
     public void logOut(){
         authRepository.logOut();
     }
+    public void changeDisplayName(String newName){
+        authRepository.changeDisplayName(newName);
+    }
+    public void changePassword(String newPass){
+        authRepository.changePassword(newPass);
+    }
     public MutableLiveData<FirebaseUser> getUserLiveData(){
         return userLiveData;
     }

@@ -95,6 +95,8 @@
                 android:layout_marginStart="16dp"
                 android:numStars="5"
                 tools:rating="3.5"
+                android:progressTint="#FFEA00"
+                android:secondaryProgressTint="#FFEA00"
                 app:layout_constraintBottom_toBottomOf="@id/rating_txt"
                 app:layout_constraintStart_toEndOf="@id/rating_txt"
                 app:layout_constraintTop_toTopOf="@id/rating_txt" />

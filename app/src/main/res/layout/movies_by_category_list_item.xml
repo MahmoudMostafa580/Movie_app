@@ -55,6 +55,8 @@
         android:layout_marginTop="4dp"
         android:numStars="5"
         android:rating="5"
+        android:progressTint="#FFEA00"
+        android:secondaryProgressTint="#FFEA00"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

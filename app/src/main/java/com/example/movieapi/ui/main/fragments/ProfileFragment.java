@@ -4,13 +4,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,6 +33,7 @@ public class ProfileFragment extends Fragment {
     private AuthViewModel authViewModel;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor editor;
+    private Uri profileImg;
 
 
     public ProfileFragment() {
@@ -69,6 +74,12 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         profileBinding = FragmentProfileBinding.inflate(inflater, container, false);
 
+        profileBinding.editProfileImg.setOnClickListener(view -> {
+            editImageLauncher.launch("image/*");
+        });
+        profileBinding.saveImageBtn.setOnClickListener(view -> {
+            authViewModel.changeProfileImage(profileImg);
+        });
         profileBinding.changeUserNameBtn.setOnClickListener(view -> {
             showNameEditText();
         });
@@ -76,9 +87,8 @@ public class ProfileFragment extends Fragment {
             showPassEditText();
         });
         profileBinding.favoriteCard.setOnClickListener(view -> {
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FavoriteFragment()).commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProductionCompaniesFragment()).commit();
         });
-
         profileBinding.logOutBtn.setOnClickListener(view -> {
             showDialog();
         });
@@ -88,6 +98,7 @@ public class ProfileFragment extends Fragment {
                 if (firebaseUser != null) {
                     profileBinding.logOutBtn.setEnabled(true);
                     getUserData(firebaseUser);
+                    profileBinding.saveImageBtn.setVisibility(View.GONE);
                 } else {
                     profileBinding.logOutBtn.setEnabled(false);
                 }
@@ -95,6 +106,26 @@ public class ProfileFragment extends Fragment {
         });
         return profileBinding.getRoot();
     }
+
+    ActivityResultLauncher<String> editImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri result) {
+                    if (result != null) {
+                        profileImg = result;
+                        Glide.with(requireActivity())
+                                .load(profileImg.toString())
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop()
+                                .into(profileBinding.profileImg);
+
+                        profileBinding.saveImageBtn.setVisibility(View.VISIBLE);
+                    }else{
+                        Toast.makeText(requireActivity(), "Can't pick image!\nPlease try again..", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
     private void showPassEditText() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
@@ -104,8 +135,8 @@ public class ProfileFragment extends Fragment {
                 .setView(dialogView)
                 .setIcon(R.drawable.ic__edit)
                 .setPositiveButton("Save", (dialogInterface, i) -> {
-                        String newPass = passEditText.getText().toString();
-                        authViewModel.changePassword(newPass);
+                    String newPass = passEditText.getText().toString();
+                    authViewModel.changePassword(newPass);
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
@@ -121,8 +152,8 @@ public class ProfileFragment extends Fragment {
                 .setView(dialogView)
                 .setIcon(R.drawable.ic__edit)
                 .setPositiveButton("Save", (dialogInterface, i) -> {
-                        String newName = nameEditText.getText().toString();
-                        authViewModel.changeDisplayName(newName);
+                    String newName = nameEditText.getText().toString();
+                    authViewModel.changeDisplayName(newName);
 
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> {

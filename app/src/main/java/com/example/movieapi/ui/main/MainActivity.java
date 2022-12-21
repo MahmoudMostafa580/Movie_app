@@ -10,7 +10,7 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.movieapi.R;
 import com.example.movieapi.databinding.ActivityMainBinding;
 import com.example.movieapi.ui.MovieViewModel;
-import com.example.movieapi.ui.main.fragments.FavoriteFragment;
+import com.example.movieapi.ui.main.fragments.ProductionCompaniesFragment;
 import com.example.movieapi.ui.main.fragments.HomeFragment;
 import com.example.movieapi.ui.main.fragments.ProfileFragment;
 
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(mainBinding.getRoot());
 
 
-        mainBinding.bottomNav.add(new MeowBottomNavigation.Model(1, R.drawable.ic_favorite));
+        mainBinding.bottomNav.add(new MeowBottomNavigation.Model(1, R.drawable.ic_movie_clapper));
         mainBinding.bottomNav.add(new MeowBottomNavigation.Model(2, R.drawable.ic_home));
         mainBinding.bottomNav.add(new MeowBottomNavigation.Model(3, R.drawable.ic_person));
         mainBinding.bottomNav.show(2, true);
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         fragment_id = model.getId();
         switch (fragment_id) {
             case 1:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FavoriteFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProductionCompaniesFragment()).commit();
                 break;
             case 2:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
@@ -76,25 +76,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    /*public void getMovieDetails(int id) {
-        movieViewModel.getMovieDetails(id).observe(this, new Observer<MovieModel>() {
-            @Override
-            public void onChanged(MovieModel movieModel) {
-                Log.v("TAG: ", movieModel.getTitle());
-            }
-        });
-    }
-
-    public void searchMovies(String queue) {
-        movieViewModel.searchMovie(queue).observe(this, new Observer<MoviesResponse>() {
-            @Override
-            public void onChanged(MoviesResponse moviesResponse) {
-                List<MovieModel> mList = new ArrayList<>(moviesResponse.getMovies());
-                for (MovieModel movie : mList) {
-                    Log.v("SEARCH TAG : ", movie.getTitle());
-                }
-            }
-        });
-    }*/
 }

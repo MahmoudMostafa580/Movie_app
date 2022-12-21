@@ -1,6 +1,7 @@
 package com.example.movieapi.data;
 
 import com.example.movieapi.pojo.CastResponse;
+import com.example.movieapi.pojo.CompanyModel;
 import com.example.movieapi.pojo.GenresResponse;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
@@ -55,6 +56,12 @@ public interface MovieInterface {
     @GET("movie/{movie_id}/similar")
     Call<MoviesResponse> getSimilarMovies(
         @Path("movie_id") int id,
+        @Query("api_key") String key
+    );
+
+    @GET("company/{company_id}")
+    Call<CompanyModel> getProductionCompanies(
+        @Path("company_id") int company_id,
         @Query("api_key") String key
     );
 

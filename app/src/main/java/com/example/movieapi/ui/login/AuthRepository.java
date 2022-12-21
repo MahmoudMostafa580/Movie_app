@@ -78,6 +78,24 @@ public class AuthRepository {
                     });
         }
     }
+    public void changeProfileImage(Uri profileUri){
+        FirebaseUser user= firebaseAuth.getCurrentUser();
+        if (user!=null){
+            UserProfileChangeRequest profileUpdates=new UserProfileChangeRequest.Builder()
+                    .setPhotoUri(profileUri)
+                    .build();
+            user.updateProfile(profileUpdates)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            userLivedata.postValue(user);
+                            Toast.makeText(application.getApplicationContext(), "Profile image updated successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.v("ERROR KEY", e.getMessage());
+                    });
+        }
+    }
 
     public MutableLiveData<FirebaseUser> getUserLiveData() {
         return userLivedata;

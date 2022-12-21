@@ -9,9 +9,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.movieapi.data.MovieRepository;
 import com.example.movieapi.pojo.CastResponse;
+import com.example.movieapi.pojo.CompanyModel;
 import com.example.movieapi.pojo.GenresResponse;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
+
+import java.util.List;
 
 public class MovieViewModel extends AndroidViewModel {
     private final MovieRepository movieRepository;
@@ -92,5 +95,12 @@ public class MovieViewModel extends AndroidViewModel {
     }
     public LiveData<MoviesResponse> getSimilarMoviesLiveData(){
         return movieRepository.getSimilarMoviesLiveData();
+    }
+
+    public void getCompanies(){
+        movieRepository.getCompanies();
+    }
+    public LiveData<List<CompanyModel>> getCompaniesLiveData(){
+        return movieRepository.getCompaniesLiveData();
     }
 }

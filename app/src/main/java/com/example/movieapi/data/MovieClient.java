@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.movieapi.pojo.CastResponse;
+import com.example.movieapi.pojo.CompanyModel;
 import com.example.movieapi.pojo.GenresResponse;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
@@ -75,5 +76,8 @@ public class MovieClient {
 
     public Call<MoviesResponse> getSimilarMovies(int movieId){
         return movieInterface.getSimilarMovies(movieId, Credentials.API_KEY);
+    }
+    public Call<CompanyModel> getProductionCompanies(int id){
+        return movieInterface.getProductionCompanies(id, Credentials.API_KEY);
     }
 }

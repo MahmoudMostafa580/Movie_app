@@ -36,6 +36,9 @@ public class AuthViewModel extends AndroidViewModel {
     public void changePassword(String newPass){
         authRepository.changePassword(newPass);
     }
+    public void changeProfileImage(Uri profileUri){
+        authRepository.changeProfileImage(profileUri);
+    }
     public MutableLiveData<FirebaseUser> getUserLiveData(){
         return userLiveData;
     }

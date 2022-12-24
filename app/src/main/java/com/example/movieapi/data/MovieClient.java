@@ -80,4 +80,8 @@ public class MovieClient {
     public Call<CompanyModel> getProductionCompanies(int id){
         return movieInterface.getProductionCompanies(id, Credentials.API_KEY);
     }
+
+    public Call<MoviesResponse> getMoviesByCompany(int companyId){
+        return movieInterface.getMoviesByCompany(Credentials.API_KEY,companyId);
+    }
 }

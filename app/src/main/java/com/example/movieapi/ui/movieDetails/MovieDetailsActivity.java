@@ -1,7 +1,10 @@
 package com.example.movieapi.ui.movieDetails;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -32,6 +35,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     MovieViewModel movieViewModel;
     CastAdapter castAdapter;
     PopularAdapter popularAdapter;
+    LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(detailsBinding.getRoot());
         movieViewModel=new ViewModelProvider(this).get(MovieViewModel.class);
         castAdapter=new CastAdapter();
+        loadingDialog=new LoadingDialog(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
@@ -47,6 +52,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             onBackPressed();
         });
 
+        loadingDialog.showDialog();
         Intent intent=getIntent();
         if (intent.hasExtra("MOVIE_ID")){
             int movieId = intent.getIntExtra("MOVIE_ID", 0);
@@ -58,6 +64,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
 
     }
+
 
     private void loadMovieDetails(int movieId) {
         movieViewModel.getMovieDetails(movieId);
@@ -121,6 +128,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         LinearLayoutManager.HORIZONTAL, false));
                 detailsBinding.similarMoviesList.setHasFixedSize(true);
                 detailsBinding.similarMoviesList.setAdapter(popularAdapter);
+                loadingDialog.HideDialog();
                 popularAdapter.setOnItemClickListener(new PopularAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
@@ -132,5 +140,24 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+    public class LoadingDialog{
+        private Context context;
+        private Dialog dialog;
+
+        public LoadingDialog(Context context) {
+            this.context = context;
+        }
+        public void showDialog(){
+            dialog=new Dialog(context);
+            dialog.setContentView(R.layout.loading_custom_dialog);
+            dialog.setCancelable(false);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+        }
+        public void HideDialog(){
+            dialog.dismiss();
+        }
+
     }
 }

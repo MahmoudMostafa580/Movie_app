@@ -34,6 +34,7 @@ public class MovieRepository {
     private MutableLiveData<CastResponse> castMutableLiveData;
     private MutableLiveData<MoviesResponse> similarMoviesLiveData;
     private MutableLiveData<List<CompanyModel>> productionCompaniesLiveData;
+    private MutableLiveData<MoviesResponse> moviesByCompanyLiveData;
 
     public MovieRepository(Application application) {
         this.application = application;
@@ -47,6 +48,7 @@ public class MovieRepository {
         this.castMutableLiveData = new MutableLiveData<>();
         this.similarMoviesLiveData = new MutableLiveData<>();
         this.productionCompaniesLiveData = new MutableLiveData<>();
+        this.moviesByCompanyLiveData=new MutableLiveData<>();
     }
 
 
@@ -242,8 +244,10 @@ public class MovieRepository {
                             public void onResponse(Call<CompanyModel> call, Response<CompanyModel> response) {
                                 if (response.isSuccessful() && response.code() == 200) {
                                     resultList.add(response.body());
-                                    productionCompaniesLiveData.setValue(resultList);
-                                    Log.v("RESPONSE TAAAAAAAAAAG: ", String.valueOf(response.body()));
+                                    Log.v("SIZE TAAAAAAAAAG ", resultList.size() + "");
+                                    if (resultList.size()==companyModelList.size()){
+                                        productionCompaniesLiveData.setValue(resultList);
+                                    }
                                 }
                             }
 
@@ -258,6 +262,26 @@ public class MovieRepository {
 
     public LiveData<List<CompanyModel>> getCompaniesLiveData() {
         return productionCompaniesLiveData;
+    }
+
+    public void getMoviesByCompany(int companyId) {
+        MovieClient.getINSTANCE().getMoviesByCompany(companyId).enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if (response.code() == 200 && response.isSuccessful()) {
+                    moviesByCompanyLiveData.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Log.e("TAG: ", "Error in response: " + t.getMessage());
+            }
+        });
+    }
+
+    public MutableLiveData<MoviesResponse> getMoviesByCompanyLiveData() {
+        return moviesByCompanyLiveData;
     }
 
 }

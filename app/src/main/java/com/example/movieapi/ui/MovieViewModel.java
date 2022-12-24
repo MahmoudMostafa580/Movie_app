@@ -103,4 +103,11 @@ public class MovieViewModel extends AndroidViewModel {
     public LiveData<List<CompanyModel>> getCompaniesLiveData(){
         return movieRepository.getCompaniesLiveData();
     }
+
+    public void getMoviesByCompany(int companyId) {
+        movieRepository.getMoviesByCompany(companyId);
+    }
+    public MutableLiveData<MoviesResponse> getMoviesByCompanyLiveData() {
+        return movieRepository.getMoviesByCompanyLiveData();
+    }
 }

@@ -65,4 +65,10 @@ public interface MovieInterface {
         @Query("api_key") String key
     );
 
+    @GET("discover/movie")
+    Call<MoviesResponse> getMoviesByCompany(
+            @Query("api_key") String key,
+            @Query("with_companies") int company_id
+    );
+
 }

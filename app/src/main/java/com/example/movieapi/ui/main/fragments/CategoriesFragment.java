@@ -1,7 +1,11 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +33,7 @@ public class CategoriesFragment extends Fragment {
     FragmentCategoriesBinding categoriesBinding;
     MovieViewModel movieViewModel;
     private GridLayoutManager gridLayoutManager;
+    LoadingDialog loadingDialog;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -70,6 +75,8 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        loadingDialog=new LoadingDialog(getActivity());
+        loadingDialog.showDialog();
         gridLayoutManager = new GridLayoutManager(requireContext(), getResources().getInteger(R.integer.grid_column_count));
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
         movieViewModel.getSelectedCategory().observe(getViewLifecycleOwner(), new Observer<Integer>() {
@@ -105,6 +112,7 @@ public class CategoriesFragment extends Fragment {
             categoriesBinding.categoryMoviesList.setHasFixedSize(true);
             categoriesBinding.categoryMoviesList.setLayoutManager(gridLayoutManager);
             categoriesBinding.categoryMoviesList.setAdapter(popularAdapter);
+            loadingDialog.HideDialog();
             popularAdapter.setOnItemClickListener(new PopularAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
@@ -115,5 +123,24 @@ public class CategoriesFragment extends Fragment {
                 }
             });
         }
+    }
+    public class LoadingDialog{
+        private Context context;
+        private Dialog dialog;
+
+        public LoadingDialog(Context context) {
+            this.context = context;
+        }
+        public void showDialog(){
+            dialog=new Dialog(context);
+            dialog.setContentView(R.layout.loading_custom_dialog);
+            dialog.setCancelable(false);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+        }
+        public void HideDialog(){
+            dialog.dismiss();
+        }
+
     }
 }

@@ -1,6 +1,10 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +34,7 @@ import java.util.List;
 public class AllFragment extends Fragment {
     FragmentAllBinding allBinding;
     MovieViewModel movieViewModel;
+    LoadingDialog loadingDialog;
     public static final String POPULAR_LIST_KEY = "popular";
     public static final String UPCOMING_LIST_KEY = "upcoming";
     public static final String TOP_RATED_LIST_KEY = "top-rated";
@@ -135,12 +140,14 @@ public class AllFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        loadingDialog=new LoadingDialog(getActivity());
         //Get popular movies
+        loadingDialog.showDialog();
         movieViewModel.getPopularMovies();
         movieViewModel.getPopularLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
             if (moviesResponse != null) {
                 loadMovies(moviesResponse, allBinding.popularRecycler);
-
             }
         });
 
@@ -157,8 +164,29 @@ public class AllFragment extends Fragment {
         movieViewModel.getTopRatedLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
             if (moviesResponse != null) {
                 loadMovies(moviesResponse, allBinding.topRatedRecycler);
+                loadingDialog.HideDialog();
             }
         });
+
+    }
+    public class LoadingDialog{
+        private Context context;
+        private Dialog dialog;
+
+        public LoadingDialog(Context context) {
+            this.context = context;
+        }
+        public void showDialog(){
+            dialog=new Dialog(context);
+            dialog.setContentView(R.layout.loading_custom_dialog);
+            dialog.setCancelable(false);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.create();
+            dialog.show();
+        }
+        public void HideDialog(){
+            dialog.dismiss();
+        }
 
     }
 }

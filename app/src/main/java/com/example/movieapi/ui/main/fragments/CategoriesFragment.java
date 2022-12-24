@@ -76,12 +76,12 @@ public class CategoriesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loadingDialog=new LoadingDialog(getActivity());
-        loadingDialog.showDialog();
         gridLayoutManager = new GridLayoutManager(requireContext(), getResources().getInteger(R.integer.grid_column_count));
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
         movieViewModel.getSelectedCategory().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+                loadingDialog.showDialog();
                 loadMovies(integer);
             }
         });

@@ -1,0 +1,342 @@
+{
+  "companies": [
+    {
+      "id": 1,
+      "name": "Lucasfilm Ltd."
+    },
+    {
+      "id": 2,
+      "name": "Walt Disney Pictures"
+    },
+    {
+      "id": 3,
+      "name": "Pixar"
+    },
+    {
+      "id": 4,
+      "name": "Paramount"
+    },
+    {
+      "id": 5,
+      "name": "Columbia Pictures"
+    },
+    {
+      "id": 6,
+      "name": "RKO Radio Pictures"
+    },
+    {
+      "id": 7,
+      "name": "DreamWorks Pictures"
+    },
+    {
+      "id": 8,
+      "name": "Fine Line Features"
+    },
+    {
+      "id": 9,
+      "name": "Gaumont"
+    },
+    {
+      "id": 10,
+      "name": "Highlight"
+    },
+    {
+      "id": 11,
+      "name": "WingNut Films"
+    },
+    {
+      "id": 12,
+      "name": "New Line Cinema"
+    },
+    {
+      "id": 14,
+      "name": "Miramax"
+    },
+    {
+      "id": 15,
+      "name": "Lama Films"
+    },
+    {
+      "id": 16,
+      "name": "United King Films"
+    },
+    {
+      "id": 17,
+      "name": "Warner Bros. Entertainment"
+    },
+    {
+      "id": 18,
+      "name": "Gracie Films"
+    },
+    {
+      "id": 19,
+      "name": "Film Roman"
+    },
+    {
+      "id": 20,
+      "name": "Rough Draft Studios"
+    },
+    {
+      "id": 21,
+      "name": "Metro-Goldwyn-Mayer"
+    },
+    {
+      "id": 22,
+      "name": "Alejandro González Iñárritu"
+    },
+    {
+      "id": 23,
+      "name": "Imagine Entertainment"
+    },
+    {
+      "id": 24,
+      "name": "Mikona Productions GmbH & Co. KG"
+    },
+    {
+      "id": 25,
+      "name": "20th Century Fox"
+    },
+    {
+      "id": 26,
+      "name": "Agustin Almodovar"
+    },
+    {
+      "id": 28,
+      "name": "Newmarket Films"
+    },
+    {
+      "id": 29,
+      "name": "Topcraft"
+    },
+    {
+      "id": 30,
+      "name": "Eddie Murphy Productions"
+    },
+    {
+      "id": 31,
+      "name": "Hamburger Filmschule"
+    },
+    {
+      "id": 32,
+      "name": "Buena Vista Pictures"
+    },
+    {
+      "id": 33,
+      "name": "Universal Pictures"
+    },
+    {
+      "id": 34,
+      "name": "Sony Pictures"
+    },
+    {
+      "id": 35,
+      "name": "Lions Gate Films"
+    },
+    {
+      "id": 37,
+      "name": "Gramercy Pictures"
+    },
+    {
+      "id": 38,
+      "name": "Zespół Filmowy TOR"
+    },
+    {
+      "id": 39,
+      "name": "Docurama"
+    },
+    {
+      "id": 40,
+      "name": "Akira Committee Production"
+    },
+    {
+      "id": 41,
+      "name": "Orion Pictures"
+    },
+    {
+      "id": 42,
+      "name": "Universal Pictures Corporation"
+    },
+    {
+      "id": 43,
+      "name": "Fox Searchlight Pictures"
+    },
+    {
+      "id": 44,
+      "name": "Cruise/Wagner Productions"
+    },
+    {
+      "id": 45,
+      "name": "Road Movies"
+    },
+    {
+      "id": 46,
+      "name": "WDR"
+    },
+    {
+      "id": 47,
+      "name": "Constantin Film"
+    },
+    {
+      "id": 48,
+      "name": "Cristaldifilm S.r.l."
+    },
+    {
+      "id": 49,
+      "name": "El Deseo"
+    },
+    {
+      "id": 50,
+      "name": "Deutsche Vereinsfilm AG"
+    },
+    {
+      "id": 51,
+      "name": "Fox Europa Produktion"
+    },
+    {
+      "id": 52,
+      "name": "Film Polski Film Agency"
+    },
+    {
+      "id": 53,
+      "name": "Les Films du Carrosse"
+    },
+    {
+      "id": 54,
+      "name": "The Independent Film Channel Productions"
+    },
+    {
+      "id": 55,
+      "name": "Decla Film Gesellschaft Holz & Co."
+    },
+    {
+      "id": 56,
+      "name": "Amblin Entertainment"
+    },
+    {
+      "id": 57,
+      "name": "Xenix Film"
+    },
+    {
+      "id": 58,
+      "name": "Sony Pictures Classics"
+    },
+    {
+      "id": 59,
+      "name": "A Band Apart"
+    },
+    {
+      "id": 60,
+      "name": "United Artists"
+    },
+    {
+      "id": 62,
+      "name": "The Selznick Studio"
+    },
+    {
+      "id": 64,
+      "name": "Les Productions Artistes Associés"
+    },
+    {
+      "id": 65,
+      "name": "Ulysse Production"
+    },
+    {
+      "id": 66,
+      "name": "Town"
+    },
+    {
+      "id": 67,
+      "name": "Unitec Films"
+    },
+    {
+      "id": 68,
+      "name": "Big Primate Pictures"
+    },
+    {
+      "id": 69,
+      "name": "MFPV Film"
+    },
+    {
+      "id": 70,
+      "name": "American Zoetrope"
+    },
+    {
+      "id": 71,
+      "name": "Elemental Films"
+    },
+    {
+      "id": 72,
+      "name": "Valoria Films"
+    },
+    {
+      "id": 73,
+      "name": "Fida Cinematografica"
+    },
+    {
+      "id": 74,
+      "name": "Moovie"
+    },
+    {
+      "id": 75,
+      "name": "Medienfonds German Film Productions GmbH & Co. KG"
+    },
+    {
+      "id": 76,
+      "name": "Zentropa Entertainments"
+    },
+    {
+      "id": 77,
+      "name": "Milestone Productions"
+    },
+    {
+      "id": 78,
+      "name": "Hotshot Films"
+    },
+    {
+      "id": 79,
+      "name": "Village Roadshow Pictures"
+    },
+    {
+      "id": 80,
+      "name": "The Zanuck Company"
+    },
+    {
+      "id": 81,
+      "name": "Plan B Entertainment"
+    },
+    {
+      "id": 82,
+      "name": "Renn Productions"
+    },
+    {
+      "id": 83,
+      "name": "France 2 Cinéma"
+    },
+    {
+      "id": 84,
+      "name": "Tree Line Films"
+    },
+    {
+      "id": 85,
+      "name": "Konrad Pictures"
+    },
+    {
+      "id": 86,
+      "name": "Catfish Productions"
+    },
+    {
+      "id": 88,
+      "name": "Hawk Films"
+    },
+    {
+      "id": 89,
+      "name": "Augustus Film"
+    },
+    {
+      "id": 90,
+      "name": "Tartan"
+    }
+  ]
+}
+
+

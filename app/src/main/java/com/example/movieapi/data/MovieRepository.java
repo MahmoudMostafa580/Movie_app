@@ -2,6 +2,7 @@ package com.example.movieapi.data;
 
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -13,9 +14,17 @@ import com.example.movieapi.pojo.GenresResponse;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.pojo.MoviesResponse;
 import com.example.movieapi.utils.Credentials;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,6 +33,8 @@ import retrofit2.Response;
 @SuppressWarnings("FieldMayBeFinal")
 public class MovieRepository {
     Application application;
+    private FirebaseFirestore mFirestore;
+    private FirebaseAuth mFirebaseAuth;
     private MutableLiveData<MoviesResponse> popularMutableLiveData;
     private MutableLiveData<MoviesResponse> upcomingMutableLiveData;
     private MutableLiveData<MoviesResponse> topRatedMutableLiveData;
@@ -35,6 +46,7 @@ public class MovieRepository {
     private MutableLiveData<MoviesResponse> similarMoviesLiveData;
     private MutableLiveData<List<CompanyModel>> productionCompaniesLiveData;
     private MutableLiveData<MoviesResponse> moviesByCompanyLiveData;
+    private MutableLiveData<Boolean> favoriteLiveData;
 
     public MovieRepository(Application application) {
         this.application = application;
@@ -48,7 +60,10 @@ public class MovieRepository {
         this.castMutableLiveData = new MutableLiveData<>();
         this.similarMoviesLiveData = new MutableLiveData<>();
         this.productionCompaniesLiveData = new MutableLiveData<>();
-        this.moviesByCompanyLiveData=new MutableLiveData<>();
+        this.moviesByCompanyLiveData = new MutableLiveData<>();
+        this.favoriteLiveData = new MutableLiveData<>();
+        this.mFirestore = FirebaseFirestore.getInstance();
+        this.mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
 
@@ -245,7 +260,7 @@ public class MovieRepository {
                                 if (response.isSuccessful() && response.code() == 200) {
                                     resultList.add(response.body());
                                     Log.v("SIZE TAAAAAAAAAG ", resultList.size() + "");
-                                    if (resultList.size()==companyModelList.size()){
+                                    if (resultList.size() == companyModelList.size()) {
                                         productionCompaniesLiveData.setValue(resultList);
                                     }
                                 }
@@ -282,6 +297,66 @@ public class MovieRepository {
 
     public MutableLiveData<MoviesResponse> getMoviesByCompanyLiveData() {
         return moviesByCompanyLiveData;
+    }
+
+    public void addToFavorite(int movieId) {
+        if (mFirebaseAuth.getCurrentUser() != null) {
+            String userId = mFirebaseAuth.getCurrentUser().getUid();
+            Map<String, Integer> movie = new HashMap<>();
+            movie.put("Movie id", movieId);
+            mFirestore.collection("users")
+                    .document(userId).collection("Favorites")
+                    .document(String.valueOf(movieId)).set(movie)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                favoriteLiveData.setValue(true);
+                                Toast.makeText(application.getApplicationContext(), "Movie added to favorite successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                favoriteLiveData.setValue(false);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(application.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        favoriteLiveData.setValue(false);
+                    });
+        } else {
+            Toast.makeText(application.getApplicationContext(), "No user exists!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public MutableLiveData<Boolean> getFavoriteLiveData() {
+        return favoriteLiveData;
+    }
+
+    public void getFromFavorite(int movieId) {
+        if (mFirebaseAuth.getCurrentUser() != null) {
+            String userId = mFirebaseAuth.getCurrentUser().getUid();
+            mFirestore.collection("users")
+                    .document(userId)
+                    .collection("Favorites")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                    if (documentSnapshot.getReference().getId().equals(String.valueOf(movieId))) {
+                                        favoriteLiveData.setValue(true);
+                                        return;
+                                    } else {
+                                        favoriteLiveData.setValue(false);
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(application.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 
 }

@@ -110,4 +110,14 @@ public class MovieViewModel extends AndroidViewModel {
     public MutableLiveData<MoviesResponse> getMoviesByCompanyLiveData() {
         return movieRepository.getMoviesByCompanyLiveData();
     }
+
+    public void addToFavorite(int movieId){
+        movieRepository.addToFavorite(movieId);
+    }
+    public void getFromFavorite(int movieId){
+        movieRepository.getFromFavorite(movieId);
+    }
+    public MutableLiveData<Boolean> getFavoriteLiveData(){
+        return movieRepository.getFavoriteLiveData();
+    }
 }

@@ -1,49 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
     android:layout_height="180dp">
-
-    <View
-        android:id="@+id/movie_img"
-        android:layout_width="110dp"
-        android:layout_height="220dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/movie_poster"
-        android:elevation="10dp" />
-
     <androidx.cardview.widget.CardView
-        android:id="@+id/background_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
+        android:layout_height="140dp"
         app:cardBackgroundColor="@color/chip_background_color"
-        app:cardCornerRadius="4dp">
-
+        android:layout_margin="8dp"
+        app:cardCornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="match_parent"
+            android:padding="8dp">
             <TextView
                 android:id="@+id/movie_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="140dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintBottom_toTopOf="@id/time_txt"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Fight Club" />
+                tools:text="FightClubFightClubFightClubFightClub" />
 
             <TextView
                 android:id="@+id/time_txt"
@@ -101,6 +94,35 @@
                 app:layout_constraintStart_toEndOf="@id/rating_txt"
                 app:layout_constraintTop_toTopOf="@id/rating_txt" />
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:cardElevation="0dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#1B606388"
+                app:cardCornerRadius="40dp" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_more"/>
+            </androidx.cardview.widget.CardView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-</RelativeLayout>
+    <View
+        android:id="@+id/movie_img"
+        android:layout_width="110dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/movie_poster"
+        android:elevation="10dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

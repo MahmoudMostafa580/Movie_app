@@ -96,7 +96,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void loadMovieDetails(int movieId) {
         movieViewModel.getMovieDetails(movieId);
-        movieViewModel.getFromFavorite(movieId);
+        movieViewModel.checkIsFavorite(movieId);
         movieViewModel.getDetailsLiveData().observe(this, new Observer<MovieModel>() {
             @Override
             public void onChanged(MovieModel movieModel) {

@@ -17,6 +17,9 @@ import com.example.movieapi.utils.Credentials;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateSource;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -47,6 +50,8 @@ public class MovieRepository {
     private MutableLiveData<List<CompanyModel>> productionCompaniesLiveData;
     private MutableLiveData<MoviesResponse> moviesByCompanyLiveData;
     private MutableLiveData<Boolean> favoriteLiveData;
+    private MutableLiveData<Long> favoriteCountLiveData;
+    private MutableLiveData<MovieModel> favoriteMoviesLiveData;
 
     public MovieRepository(Application application) {
         this.application = application;
@@ -62,6 +67,8 @@ public class MovieRepository {
         this.productionCompaniesLiveData = new MutableLiveData<>();
         this.moviesByCompanyLiveData = new MutableLiveData<>();
         this.favoriteLiveData = new MutableLiveData<>();
+        this.favoriteCountLiveData = new MutableLiveData<>();
+        this.favoriteMoviesLiveData = new MutableLiveData<>();
         this.mFirestore = FirebaseFirestore.getInstance();
         this.mFirebaseAuth = FirebaseAuth.getInstance();
     }
@@ -259,7 +266,7 @@ public class MovieRepository {
                             public void onResponse(Call<CompanyModel> call, Response<CompanyModel> response) {
                                 if (response.isSuccessful() && response.code() == 200) {
                                     resultList.add(response.body());
-                                    Log.v("SIZE TAAAAAAAAAG ", resultList.size() + "");
+                                    Log.v("SIZE TAG ", resultList.size() + "");
                                     if (resultList.size() == companyModelList.size()) {
                                         productionCompaniesLiveData.setValue(resultList);
                                     }
@@ -331,7 +338,7 @@ public class MovieRepository {
         return favoriteLiveData;
     }
 
-    public void getFromFavorite(int movieId) {
+    public void checkIsFavorite(int movieId) {
         if (mFirebaseAuth.getCurrentUser() != null) {
             String userId = mFirebaseAuth.getCurrentUser().getUid();
             mFirestore.collection("users")
@@ -356,7 +363,77 @@ public class MovieRepository {
                     .addOnFailureListener(e -> {
                         Toast.makeText(application.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
+        } else {
+            Toast.makeText(application.getApplicationContext(), "No user exists!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void getFavoriteMoviesCount() {
+        if (mFirebaseAuth.getCurrentUser() != null) {
+            String userId = mFirebaseAuth.getCurrentUser().getUid();
+            CollectionReference collection = mFirestore.collection("users").document(userId).collection("Favorites");
+            AggregateQuery countQuery = collection.count();
+            countQuery.get(AggregateSource.SERVER)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            long count = task.getResult().getCount();
+                            favoriteCountLiveData.setValue(count);
+                        } else {
+                            Toast.makeText(application.getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(application.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(application.getApplicationContext(), "No user exists!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public MutableLiveData<Long> getFavoriteCountLiveData() {
+        return favoriteCountLiveData;
+    }
+
+    public void getFavoriteMovies() {
+        if (mFirebaseAuth.getCurrentUser() != null) {
+            String userId = mFirebaseAuth.getCurrentUser().getUid();
+            mFirestore.collection("users").document(userId).collection("Favorites")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                List<MovieModel> movies = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    MovieClient.getINSTANCE().getMovieDetails(Integer.parseInt(document.getId()))
+                                            .enqueue(new Callback<MovieModel>() {
+                                                @Override
+                                                public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
+                                                    if (response.isSuccessful() && response.code() == 200) {
+                                                        //movies.add(response.body());
+                                                        favoriteMoviesLiveData.setValue(response.body());
+
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<MovieModel> call, Throwable t) {
+                                                    Log.e("TAG: ", "Error in response: " + t.getMessage());
+                                                }
+                                            });
+                                }
+                                Log.v("SIZE TAAAG ", movies.size()+"");
+
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(application.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+    public LiveData<MovieModel> getFavoriteMoviesLiveData(){
+        return favoriteMoviesLiveData;
     }
 
 }

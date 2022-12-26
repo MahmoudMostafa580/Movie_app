@@ -114,10 +114,23 @@ public class MovieViewModel extends AndroidViewModel {
     public void addToFavorite(int movieId){
         movieRepository.addToFavorite(movieId);
     }
-    public void getFromFavorite(int movieId){
-        movieRepository.getFromFavorite(movieId);
+    public void checkIsFavorite(int movieId){
+        movieRepository.checkIsFavorite(movieId);
     }
     public MutableLiveData<Boolean> getFavoriteLiveData(){
         return movieRepository.getFavoriteLiveData();
+    }
+    public void getFavoriteCount(){
+        movieRepository.getFavoriteMoviesCount();
+    }
+    public LiveData<Long> getFavoriteCountLiveData(){
+        return movieRepository.getFavoriteCountLiveData();
+    }
+
+    public void getFavoriteMovies(){
+        movieRepository.getFavoriteMovies();
+    }
+    public LiveData<MovieModel> getFavoriteMoviesLiveData(){
+        return movieRepository.getFavoriteMoviesLiveData();
     }
 }

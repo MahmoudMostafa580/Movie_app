@@ -23,6 +23,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.movieapi.R;
 import com.example.movieapi.databinding.FragmentProfileBinding;
+import com.example.movieapi.ui.favorite.FavoriteActivity;
+import com.example.movieapi.ui.MovieViewModel;
 import com.example.movieapi.ui.login.AuthViewModel;
 import com.example.movieapi.ui.login.SignInActivity;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,9 +33,11 @@ import com.google.firebase.auth.FirebaseUser;
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding profileBinding;
     private AuthViewModel authViewModel;
+    private MovieViewModel movieViewModel;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor editor;
     private Uri profileImg;
+    private Long favoriteCount;
 
 
     public ProfileFragment() {
@@ -50,6 +54,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
 
         mSharedPreferences = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         editor = mSharedPreferences.edit();
@@ -87,7 +92,9 @@ public class ProfileFragment extends Fragment {
             showPassEditText();
         });
         profileBinding.favoriteCard.setOnClickListener(view -> {
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProductionCompaniesFragment()).commit();
+            Intent intent = new Intent(requireActivity(), FavoriteActivity.class);
+            intent.putExtra("FAVORITE COUNT", favoriteCount);
+            startActivity(intent);
         });
         profileBinding.logOutBtn.setOnClickListener(view -> {
             showDialog();
@@ -102,6 +109,15 @@ public class ProfileFragment extends Fragment {
                 } else {
                     profileBinding.logOutBtn.setEnabled(false);
                 }
+            }
+        });
+
+        movieViewModel.getFavoriteCount();
+        movieViewModel.getFavoriteCountLiveData().observe(requireActivity(), new Observer<Long>() {
+            @Override
+            public void onChanged(Long count) {
+                profileBinding.favoriteItemsCount.setText(String.valueOf(count));
+                favoriteCount=count;
             }
         });
         return profileBinding.getRoot();

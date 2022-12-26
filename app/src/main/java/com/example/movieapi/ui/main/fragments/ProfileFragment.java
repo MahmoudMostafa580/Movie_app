@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -71,6 +73,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
     }
 
     @Override
@@ -92,7 +95,7 @@ public class ProfileFragment extends Fragment {
             showPassEditText();
         });
         profileBinding.favoriteCard.setOnClickListener(view -> {
-            Intent intent = new Intent(requireActivity(), FavoriteActivity.class);
+            Intent intent = new Intent(getActivity(), FavoriteActivity.class);
             intent.putExtra("FAVORITE COUNT", favoriteCount);
             startActivity(intent);
         });
@@ -112,14 +115,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        movieViewModel.getFavoriteCount();
-        movieViewModel.getFavoriteCountLiveData().observe(requireActivity(), new Observer<Long>() {
-            @Override
-            public void onChanged(Long count) {
-                profileBinding.favoriteItemsCount.setText(String.valueOf(count));
-                favoriteCount=count;
-            }
-        });
+
         return profileBinding.getRoot();
     }
 
@@ -203,5 +199,18 @@ public class ProfileFragment extends Fragment {
                 .centerCrop()
                 .placeholder(R.drawable.ic_person)
                 .into(profileBinding.profileImg);
+    }
+
+    @Override
+    public void onStart() {
+        movieViewModel.getFavoriteCount();
+        movieViewModel.getFavoriteCountLiveData().observe(getViewLifecycleOwner(), new Observer<Long>() {
+            @Override
+            public void onChanged(Long count) {
+                profileBinding.favoriteItemsCount.setText(String.valueOf(count));
+                favoriteCount=count;
+            }
+        });
+        super.onStart();
     }
 }

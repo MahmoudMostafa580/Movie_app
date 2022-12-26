@@ -133,4 +133,8 @@ public class MovieViewModel extends AndroidViewModel {
     public LiveData<MovieModel> getFavoriteMoviesLiveData(){
         return movieRepository.getFavoriteMoviesLiveData();
     }
+
+    public void removeMovieFromFavorite(int movieId){
+        movieRepository.removeMovieFromFavorite(movieId);
+    }
 }

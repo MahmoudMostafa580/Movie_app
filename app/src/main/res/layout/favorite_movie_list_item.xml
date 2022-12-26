@@ -95,6 +95,7 @@
                 app:layout_constraintTop_toTopOf="@id/rating_txt" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/favorite_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"

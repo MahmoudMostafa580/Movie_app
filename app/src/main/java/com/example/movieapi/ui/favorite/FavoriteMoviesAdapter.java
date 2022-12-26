@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -82,6 +83,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
         View movieImg;
         TextView movieName, movieRuntime, movieRatingTxt;
         RatingBar movieRatingBar;
+        CardView menu;
 
         public FavoriteMovieViewHolder(@NonNull View itemView, OnFavoriteItemClickListener listener) {
             super(itemView);
@@ -90,6 +92,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
             movieRuntime = itemView.findViewById(R.id.time_value);
             movieRatingTxt = itemView.findViewById(R.id.rating_txt);
             movieRatingBar = itemView.findViewById(R.id.movie_rating_bar);
+            menu = itemView.findViewById(R.id.favorite_menu);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -102,10 +105,19 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
                     }
                 }
             });
+            menu.setOnClickListener(view -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onFavoriteMenuClick(position, view);
+                    }
+                }
+            });
         }
     }
 
     public interface OnFavoriteItemClickListener {
         void onFavoriteItemClick(int position);
+        void onFavoriteMenuClick(int position, View v);
     }
 }

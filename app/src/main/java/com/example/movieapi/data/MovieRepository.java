@@ -410,9 +410,7 @@ public class MovieRepository {
                                                 @Override
                                                 public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
                                                     if (response.isSuccessful() && response.code() == 200) {
-                                                        //movies.add(response.body());
                                                         favoriteMoviesLiveData.setValue(response.body());
-
                                                     }
                                                 }
 
@@ -423,17 +421,41 @@ public class MovieRepository {
                                             });
                                 }
                                 Log.v("SIZE TAAAG ", movies.size()+"");
-
                             }
                         }
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(application.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
+        }else {
+            Toast.makeText(application.getApplicationContext(), "No user exists!", Toast.LENGTH_SHORT).show();
         }
     }
     public LiveData<MovieModel> getFavoriteMoviesLiveData(){
         return favoriteMoviesLiveData;
+    }
+
+    public void removeMovieFromFavorite(int movieId){
+        if (mFirebaseAuth.getCurrentUser()!=null){
+            String userId = mFirebaseAuth.getCurrentUser().getUid();
+            mFirestore.collection("users").document(userId).collection("Favorites")
+                    .document(String.valueOf(movieId)).delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Toast.makeText(application.getApplicationContext(), "Movie removed successfully", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(application.getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(application.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }else {
+            Toast.makeText(application.getApplicationContext(), "No user exists!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

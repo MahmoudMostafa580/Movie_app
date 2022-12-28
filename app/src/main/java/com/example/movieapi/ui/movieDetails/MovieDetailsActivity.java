@@ -1,5 +1,6 @@
 package com.example.movieapi.ui.movieDetails;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +37,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     MovieViewModel movieViewModel;
     CastAdapter castAdapter;
     PopularAdapter popularAdapter;
-    LoadingDialog loadingDialog;
+    Credentials.LoadingDialog loadingDialog;
     int movieId;
     boolean addedToFavorite = false;
 
@@ -48,7 +49,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(detailsBinding.getRoot());
         movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         castAdapter = new CastAdapter();
-        loadingDialog = new LoadingDialog(this);
+        loadingDialog = new Credentials.LoadingDialog(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
@@ -61,7 +62,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (intent.hasExtra("MOVIE_ID")) {
             movieId = intent.getIntExtra("MOVIE_ID", 0);
             if (movieId != 0) {
-                loadMovieDetails(movieId);
+                if (!Credentials.isConnected(this)) {
+                    loadingDialog.HideDialog();
+                    new AlertDialog.Builder(this)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Internet Connection Alert")
+                            .setMessage("Please Check Your Internet Connection")
+                            .setPositiveButton("Cancel", (dialogInterface, i) -> {
+                                finish();
+                            }).show();
+                } else {
+                    loadMovieDetails(movieId);
+                }
             } else {
                 Toast.makeText(this, "Can't load movie details!", Toast.LENGTH_SHORT).show();
             }
@@ -76,7 +88,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     addedToFavorite = false;
                     detailsBinding.favoriteIcon.setColorFilter(getResources().getColor(R.color.chip_background_color, getTheme()));
                 }
-
             }
         });
         detailsBinding.addToFavoriteInnerCard.setOnClickListener(new View.OnClickListener() {
@@ -171,25 +182,4 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
-    public class LoadingDialog {
-        private Context context;
-        private Dialog dialog;
-
-        public LoadingDialog(Context context) {
-            this.context = context;
-        }
-
-        public void showDialog() {
-            dialog = new Dialog(context);
-            dialog.setContentView(R.layout.loading_custom_dialog);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.show();
-        }
-
-        public void HideDialog() {
-            dialog.dismiss();
-        }
-
-    }
 }

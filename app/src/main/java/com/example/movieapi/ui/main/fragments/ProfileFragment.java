@@ -15,8 +15,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,10 +23,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.movieapi.R;
 import com.example.movieapi.databinding.FragmentProfileBinding;
-import com.example.movieapi.ui.favorite.FavoriteActivity;
 import com.example.movieapi.ui.MovieViewModel;
+import com.example.movieapi.ui.favorite.FavoriteActivity;
 import com.example.movieapi.ui.login.AuthViewModel;
 import com.example.movieapi.ui.login.SignInActivity;
+import com.example.movieapi.utils.Credentials;
 import com.google.firebase.auth.FirebaseUser;
 
 
@@ -40,6 +39,7 @@ public class ProfileFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private Uri profileImg;
     private Long favoriteCount;
+    Credentials.LoadingDialog loadingDialog;
 
 
     public ProfileFragment() {
@@ -57,10 +57,10 @@ public class ProfileFragment extends Fragment {
         setRetainInstance(true);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
+        loadingDialog = new Credentials.LoadingDialog(getContext());
 
         mSharedPreferences = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         editor = mSharedPreferences.edit();
-
 
         authViewModel.getLoggedOutLiveData().observe(this, new Observer<Boolean>() {
             @Override
@@ -133,7 +133,7 @@ public class ProfileFragment extends Fragment {
                                 .into(profileBinding.profileImg);
 
                         profileBinding.saveImageBtn.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         Toast.makeText(requireActivity(), "Can't pick image!\nPlease try again..", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -203,14 +203,28 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onStart() {
-        movieViewModel.getFavoriteCount();
-        movieViewModel.getFavoriteCountLiveData().observe(getViewLifecycleOwner(), new Observer<Long>() {
-            @Override
-            public void onChanged(Long count) {
-                profileBinding.favoriteItemsCount.setText(String.valueOf(count));
-                favoriteCount=count;
-            }
-        });
+        loadingDialog.showDialog();
+        if (!Credentials.isConnected(getContext())) {
+            loadingDialog.HideDialog();
+            new AlertDialog.Builder(getActivity())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Internet Connection Alert")
+                    .setMessage("Please Check Your Internet Connection")
+                    .setPositiveButton("Cancel", (dialogInterface, i) -> {
+                        requireActivity().finish();
+                    }).show();
+        }else{
+            movieViewModel.getFavoriteCount();
+            movieViewModel.getFavoriteCountLiveData().observe(getViewLifecycleOwner(), new Observer<Long>() {
+                @Override
+                public void onChanged(Long count) {
+                    profileBinding.favoriteItemsCount.setText(String.valueOf(count));
+                    favoriteCount = count;
+                    loadingDialog.HideDialog();
+                }
+            });
+        }
+
         super.onStart();
     }
 }

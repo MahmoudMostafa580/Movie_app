@@ -87,6 +87,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(@NonNull Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("TAG: ", "Error in response: " + t.getMessage());
             }
         });
@@ -107,6 +108,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("TAG: ", "Error in response: " + t.getMessage());
             }
         });
@@ -127,6 +129,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("TAG: ", "Error in response: " + t.getMessage());
             }
         });
@@ -143,6 +146,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("TAG: ", "Error in response: " + t.getMessage());
             }
         });
@@ -168,6 +172,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.v("ERROR TEG: ", t.getMessage());
             }
         });
@@ -181,12 +186,14 @@ public class MovieRepository {
         MovieClient.getINSTANCE().getMovieDetails(id).enqueue(new Callback<MovieModel>() {
             @Override
             public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
-                detailsMutableLiveData.setValue(response.body());
+                if (response.isSuccessful() && response.code()==200){
+                    detailsMutableLiveData.setValue(response.body());
+                }
             }
 
             @Override
             public void onFailure(Call<MovieModel> call, Throwable t) {
-                Log.e("ERROR TAG: ", t.getMessage());
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -206,6 +213,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(Call<GenresResponse> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("ERROR TAG: ", t.getMessage());
             }
         });
@@ -223,6 +231,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(Call<CastResponse> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.v("TAG RESPONSE", t.getMessage());
             }
         });
@@ -243,6 +252,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.v("ERROR TAG: ", t.getMessage());
             }
         });
@@ -275,6 +285,7 @@ public class MovieRepository {
 
                             @Override
                             public void onFailure(Call<CompanyModel> call, Throwable t) {
+                                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                                 Log.v("ERROR TAG: ", t.getMessage());
                             }
                         });
@@ -297,6 +308,7 @@ public class MovieRepository {
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("TAG: ", "Error in response: " + t.getMessage());
             }
         });
@@ -416,6 +428,7 @@ public class MovieRepository {
 
                                                 @Override
                                                 public void onFailure(Call<MovieModel> call, Throwable t) {
+                                                    Toast.makeText(application.getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                                                     Log.e("TAG: ", "Error in response: " + t.getMessage());
                                                 }
                                             });

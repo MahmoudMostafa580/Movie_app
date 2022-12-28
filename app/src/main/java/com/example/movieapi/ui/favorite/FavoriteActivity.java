@@ -1,5 +1,6 @@
 package com.example.movieapi.ui.favorite;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.example.movieapi.databinding.ActivityFavoriteBinding;
 import com.example.movieapi.pojo.MovieModel;
 import com.example.movieapi.ui.MovieViewModel;
 import com.example.movieapi.ui.movieDetails.MovieDetailsActivity;
+import com.example.movieapi.utils.Credentials;
 
 import java.util.ArrayList;
 
@@ -41,18 +43,31 @@ public class FavoriteActivity extends AppCompatActivity {
         favoriteCount = intent.getLongExtra("FAVORITE COUNT", 0);
 
         movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
-        movieViewModel.getFavoriteMovies();
-        movieViewModel.getFavoriteMoviesLiveData().observe(FavoriteActivity.this, new Observer<MovieModel>() {
-            @Override
-            public void onChanged(MovieModel movieModel) {
-                movies.add(movieModel);
-                if (movies.size() == favoriteCount) {
-                    Log.v("SIZE LIST ", movies.size() + "");
-                    prepareAdapter(movies);
-                }
-            }
-        });
 
+        favoriteBinding.favoriteRecycler.setVisibility(View.GONE);
+        favoriteBinding.favoriteLoadingProgress.setVisibility(View.VISIBLE);
+        if (!Credentials.isConnected(this)){
+            favoriteBinding.favoriteLoadingProgress.setVisibility(View.GONE);
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Internet Connection Alert")
+                    .setMessage("Please Check Your Internet Connection")
+                    .setPositiveButton("Cancel", (dialogInterface, i) -> {
+                        finish();
+                    }).show();
+        }else{
+            movieViewModel.getFavoriteMovies();
+            movieViewModel.getFavoriteMoviesLiveData().observe(FavoriteActivity.this, new Observer<MovieModel>() {
+                @Override
+                public void onChanged(MovieModel movieModel) {
+                    movies.add(movieModel);
+                    if (movies.size() == favoriteCount) {
+                        Log.v("SIZE LIST ", movies.size() + "");
+                        prepareAdapter(movies);
+                    }
+                }
+            });
+        }
     }
 
     private void prepareAdapter(ArrayList<MovieModel> movies) {
@@ -60,6 +75,8 @@ public class FavoriteActivity extends AppCompatActivity {
         favoriteBinding.favoriteRecycler.setLayoutManager(new LinearLayoutManager(this));
         favoriteBinding.favoriteRecycler.setHasFixedSize(true);
         favoriteAdapter.setList(movies);
+        favoriteBinding.favoriteLoadingProgress.setVisibility(View.GONE);
+        favoriteBinding.favoriteRecycler.setVisibility(View.VISIBLE);
         favoriteBinding.favoriteRecycler.setAdapter(favoriteAdapter);
         favoriteAdapter.setOnFavoriteItemClickListener(new FavoriteMoviesAdapter.OnFavoriteItemClickListener() {
             @Override

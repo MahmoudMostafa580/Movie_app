@@ -1,5 +1,6 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import com.example.movieapi.ui.movieDetails.MovieDetailsActivity;
 import com.example.movieapi.ui.MovieViewModel;
 import com.example.movieapi.ui.ShowMoreActivity;
 import com.example.movieapi.ui.main.adapters.PopularAdapter;
+import com.example.movieapi.utils.Credentials;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ import java.util.List;
 public class AllFragment extends Fragment {
     FragmentAllBinding allBinding;
     MovieViewModel movieViewModel;
-    LoadingDialog loadingDialog;
+    Credentials.LoadingDialog loadingDialog;
     public static final String POPULAR_LIST_KEY = "popular";
     public static final String UPCOMING_LIST_KEY = "upcoming";
     public static final String TOP_RATED_LIST_KEY = "top-rated";
@@ -140,10 +142,24 @@ public class AllFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        loadingDialog=new LoadingDialog(getActivity());
-        //Get popular movies
+        loadingDialog=new Credentials.LoadingDialog(getActivity());
         loadingDialog.showDialog();
+        if (!Credentials.isConnected(requireActivity())){
+            loadingDialog.HideDialog();
+            new AlertDialog.Builder(getActivity())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Internet Connection Alert")
+                    .setMessage("Please Check Your Internet Connection")
+                    .setPositiveButton("Cancel", (dialogInterface, i) -> {
+                        requireActivity().finish();
+                    }).show();
+        }else{
+            loadAllMovies();
+        }
+    }
+
+    private void loadAllMovies() {
+        //Get popular movies
         movieViewModel.getPopularMovies();
         movieViewModel.getPopularLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
             if (moviesResponse != null) {
@@ -169,24 +185,5 @@ public class AllFragment extends Fragment {
         });
 
     }
-    public class LoadingDialog{
-        private Context context;
-        private Dialog dialog;
 
-        public LoadingDialog(Context context) {
-            this.context = context;
-        }
-        public void showDialog(){
-            dialog=new Dialog(context);
-            dialog.setContentView(R.layout.loading_custom_dialog);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.create();
-            dialog.show();
-        }
-        public void HideDialog(){
-            dialog.dismiss();
-        }
-
-    }
 }

@@ -1,9 +1,16 @@
 package com.example.movieapi.utils;
 
+
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.movieapi.R;
 import com.example.movieapi.pojo.CompanyModel;
 
 import org.json.JSONArray;
@@ -44,18 +51,46 @@ public class Credentials {
         try {
             JSONObject baseJson = new JSONObject(json);
             JSONArray companiesList = baseJson.getJSONArray("companies");
-            for (int i = 0; i < companiesList.length() ; i++) {
-                JSONObject currentCompany=companiesList.getJSONObject(i);
+            for (int i = 0; i < companiesList.length(); i++) {
+                JSONObject currentCompany = companiesList.getJSONObject(i);
                 int id = currentCompany.getInt("id");
                 String name = currentCompany.getString("name");
-                CompanyModel companyModel=new CompanyModel(id,name);
+                CompanyModel companyModel = new CompanyModel(id, name);
                 companyList.add(companyModel);
             }
 
         } catch (JSONException e) {
-            Log.e("company json extraction","Error while extract json features!", e);
+            Log.e("company json extraction", "Error while extract json features!", e);
         }
         return companyList;
+    }
+
+    public static boolean isConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnected();
+    }
+
+    public static class LoadingDialog {
+        private Context context;
+        private Dialog dialog;
+
+        public LoadingDialog(Context context) {
+            this.context = context;
+        }
+
+        public void showDialog() {
+            dialog = new Dialog(context);
+            dialog.setContentView(R.layout.loading_custom_dialog);
+            dialog.setCancelable(false);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+        }
+
+        public void HideDialog() {
+            dialog.dismiss();
+        }
+
     }
 
 }

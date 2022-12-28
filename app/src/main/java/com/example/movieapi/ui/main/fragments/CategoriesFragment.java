@@ -1,5 +1,6 @@
 package com.example.movieapi.ui.main.fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import com.example.movieapi.pojo.MoviesResponse;
 import com.example.movieapi.ui.MovieViewModel;
 import com.example.movieapi.ui.main.adapters.PopularAdapter;
 import com.example.movieapi.ui.movieDetails.MovieDetailsActivity;
+import com.example.movieapi.utils.Credentials;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class CategoriesFragment extends Fragment {
     FragmentCategoriesBinding categoriesBinding;
     MovieViewModel movieViewModel;
     private GridLayoutManager gridLayoutManager;
-    LoadingDialog loadingDialog;
+    Credentials.LoadingDialog loadingDialog;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -75,14 +77,26 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadingDialog=new LoadingDialog(getActivity());
+        loadingDialog = new Credentials.LoadingDialog(getActivity());
         gridLayoutManager = new GridLayoutManager(requireContext(), getResources().getInteger(R.integer.grid_column_count));
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
+
         movieViewModel.getSelectedCategory().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 loadingDialog.showDialog();
-                loadMovies(integer);
+                if (!Credentials.isConnected(getActivity())) {
+                    loadingDialog.HideDialog();
+                    new AlertDialog.Builder(getActivity())
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Internet Connection Alert")
+                            .setMessage("Please Check Your Internet Connection")
+                            .setPositiveButton("Cancel", (dialogInterface, i) -> {
+                                requireActivity().finish();
+                            }).show();
+                } else {
+                    loadMovies(integer);
+                }
             }
         });
 
@@ -124,23 +138,5 @@ public class CategoriesFragment extends Fragment {
             });
         }
     }
-    public class LoadingDialog{
-        private Context context;
-        private Dialog dialog;
 
-        public LoadingDialog(Context context) {
-            this.context = context;
-        }
-        public void showDialog(){
-            dialog=new Dialog(context);
-            dialog.setContentView(R.layout.loading_custom_dialog);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.show();
-        }
-        public void HideDialog(){
-            dialog.dismiss();
-        }
-
-    }
 }

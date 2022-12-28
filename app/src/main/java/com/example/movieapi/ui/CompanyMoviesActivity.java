@@ -1,5 +1,6 @@
 package com.example.movieapi.ui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,10 +12,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.movieapi.R;
 import com.example.movieapi.databinding.ActivityCompanyMoviesBinding;
-import com.example.movieapi.databinding.ActivityMovieDetailsBinding;
 import com.example.movieapi.pojo.MoviesResponse;
 import com.example.movieapi.ui.main.adapters.PopularAdapter;
 import com.example.movieapi.ui.movieDetails.MovieDetailsActivity;
+import com.example.movieapi.utils.Credentials;
 
 public class CompanyMoviesActivity extends AppCompatActivity {
 
@@ -41,18 +42,30 @@ public class CompanyMoviesActivity extends AppCompatActivity {
         int company_id = intent.getIntExtra("COMPANY_ID", 0);
         String name = intent.getStringExtra("COMPANY_NAME");
         getSupportActionBar().setTitle(name);
-        movieViewModel.getMoviesByCompany(company_id);
-        movieViewModel.getMoviesByCompanyLiveData().observe(this, new Observer<MoviesResponse>() {
-            @Override
-            public void onChanged(MoviesResponse moviesResponse) {
-                if (moviesResponse.getMovies().size()==0){
-                    binding.moviesProgress.setVisibility(View.GONE);
-                    binding.noMoviesTxt.setVisibility(View.VISIBLE);
-                }else{
-                    prepareAdapter(moviesResponse);
+        if (!Credentials.isConnected(this)) {
+            binding.moviesProgress.setVisibility(View.INVISIBLE);
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Internet Connection Alert")
+                    .setMessage("Please Check Your Internet Connection")
+                    .setPositiveButton("Cancel", (dialogInterface, i) -> {
+                        finish();
+                    }).show();
+        }else{
+            movieViewModel.getMoviesByCompany(company_id);
+            movieViewModel.getMoviesByCompanyLiveData().observe(this, new Observer<MoviesResponse>() {
+                @Override
+                public void onChanged(MoviesResponse moviesResponse) {
+                    if (moviesResponse.getMovies().size() == 0) {
+                        binding.moviesProgress.setVisibility(View.GONE);
+                        binding.noMoviesTxt.setVisibility(View.VISIBLE);
+                    } else {
+                        prepareAdapter(moviesResponse);
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     private void prepareAdapter(MoviesResponse moviesResponse) {
@@ -66,7 +79,7 @@ public class CompanyMoviesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 int id = moviesResponse.getMovies().get(position).getId();
-                Intent intent=new Intent(CompanyMoviesActivity.this, MovieDetailsActivity.class);
+                Intent intent = new Intent(CompanyMoviesActivity.this, MovieDetailsActivity.class);
                 intent.putExtra("MOVIE_ID", id);
                 startActivity(intent);
             }

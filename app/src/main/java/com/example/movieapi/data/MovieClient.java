@@ -11,7 +11,9 @@ import com.example.movieapi.pojo.MoviesResponse;
 import com.example.movieapi.utils.Credentials;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,9 +27,14 @@ public class MovieClient {
     MutableLiveData<MoviesResponse> mMovies;
 
     public MovieClient(){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .build();
         Retrofit retrofit=new Retrofit.Builder()
                 .baseUrl(Credentials.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
                 .build();
 
         movieInterface =retrofit.create(MovieInterface.class);

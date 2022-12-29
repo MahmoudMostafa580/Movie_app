@@ -1,5 +1,4 @@
 ![Home Screen](https://user-images.githubusercontent.com/71029821/209985310-dc3da4a8-f0a0-44c9-ba31-5e7fad9cd015.jpg)
-![movie details screen](https://user-images.githubusercontent.com/71029821/209985759-5869e2eb-5c49-4aed-8d2b-7f493ccf57c1.jpg)
 
 # Movie Discovery
 This is android application that uses Restful API with java programming language to get movies from TMDB API.

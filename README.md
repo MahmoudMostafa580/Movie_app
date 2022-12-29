@@ -18,7 +18,7 @@ This is android application that uses Restful API with java programming language
   - genres
   - overview
   - cast of movie
-  - similar movies![WhatsApp Image 2022-12-29 at 18 57 14](https://user-images.githubusercontent.com/71029821/209985217-f01b5358-b278-45e8-9739-dbac64d5e30d.jpg)
+  - similar movies
 * Search movies by genres (Action, Comedy, Drama, Adventure, etc..).
 * Search movies by title.
 * Browse production companies

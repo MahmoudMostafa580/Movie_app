@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -61,19 +63,7 @@ public class HomeFragment extends Fragment {
         loadingDialog = new Credentials.LoadingDialog(getContext());
 
         requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.categories_fragments_container, new AllFragment()).commit();
-        loadingDialog.showDialog();
-        if (!Credentials.isConnected(getContext())) {
-            loadingDialog.HideDialog();
-            new AlertDialog.Builder(getActivity())
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Internet Connection Alert")
-                    .setMessage("Please Check Your Internet Connection")
-                    .setPositiveButton("Cancel", (dialogInterface, i) -> {
-                        requireActivity().finish();
-                    }).show();
-        } else {
-            movieViewModel.getGenres();
-        }
+
     }
 
     @Override
@@ -82,6 +72,26 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
 
+
+        if (!Credentials.isConnected(requireActivity())) {
+            new AlertDialog.Builder(getActivity())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Internet Connection Alert")
+                    .setMessage("Please Check Your Internet Connection")
+                    .setPositiveButton("Cancel", (dialogInterface, i) -> {
+                        requireActivity().finish();
+                    }).show();
+        } else {
+            loadingDialog.showDialog();
+            movieViewModel.getGenres();
+            movieViewModel.getGenresLiveData().observe(requireActivity(), genresResponse -> {
+                if (genresResponse != null) {
+                    getGenres(inflater, genresResponse);
+                } else {
+                    Log.v("GENRE ERROR:: ", "Error in loading genres!");
+                }
+            });
+        }
         fragmentHomeBinding.categoriesChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == -1) {
                 fragmentHomeBinding.categoriesChipGroup.check(R.id.chip_all);
@@ -101,13 +111,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        movieViewModel.getGenresLiveData().observe(requireActivity(), genresResponse -> {
-            if (genresResponse != null) {
-                getGenres(inflater, genresResponse);
-            } else {
-                Log.v("GENRE ERROR:: ", "Error in loading genres!");
-            }
-        });
+
 
         fragmentHomeBinding.searchLayout.setOnClickListener(view -> {
             startActivity(new Intent(getActivity(), SearchActivity.class));
@@ -139,6 +143,5 @@ public class HomeFragment extends Fragment {
                 .placeholder(R.drawable.ic_person)
                 .into(fragmentHomeBinding.userImg);
     }
-
 
 }

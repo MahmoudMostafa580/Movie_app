@@ -46,19 +46,7 @@ public class ProductionCompaniesFragment extends Fragment {
         setRetainInstance(true);
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
         loadingDialog = new Credentials.LoadingDialog(getContext());
-        loadingDialog.showDialog();
-        if (!Credentials.isConnected(getContext())){
-            loadingDialog.HideDialog();
-            new AlertDialog.Builder(getActivity())
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Internet Connection Alert")
-                    .setMessage("Please Check Your Internet Connection")
-                    .setPositiveButton("Cancel", (dialogInterface, i) -> {
-                        requireActivity().finish();
-                    }).show();
-        }else{
-            movieViewModel.getCompanies();
-        }
+
 
     }
 
@@ -68,14 +56,32 @@ public class ProductionCompaniesFragment extends Fragment {
         // Inflate the layout for this fragment
         companiesBinding = FragmentProductionCompaniesBinding.inflate(inflater, container, false);
         companiesBinding.companiesProgress.setVisibility(View.VISIBLE);
-        movieViewModel.getCompaniesLiveData().observe(getViewLifecycleOwner(), new Observer<List<CompanyModel>>() {
-            @Override
-            public void onChanged(List<CompanyModel> companyModels) {
-                if (companyModels != null) {
-                    prepareAdapter(companyModels);
+        loadingDialog.showDialog();
+        if (!Credentials.isConnected(getContext())){
+            loadingDialog.HideDialog();
+
+            new AlertDialog.Builder(getActivity())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Internet Connection Alert")
+                    .setMessage("Please Check Your Internet Connection")
+                    .setPositiveButton("Cancel", (dialogInterface, i) -> {
+                        requireActivity().finish();
+                    }).show();
+        }else{
+            movieViewModel.getCompanies();
+            movieViewModel.getCompaniesLiveData().observe(getViewLifecycleOwner(), new Observer<List<CompanyModel>>() {
+                @Override
+                public void onChanged(List<CompanyModel> companyModels) {
+                    if (companyModels != null) {
+                        prepareAdapter(companyModels);
+                    }
                 }
+            });
+            if (loadingDialog.isShowing()){
+                loadingDialog.HideDialog();
             }
-        });
+        }
+
         return companiesBinding.getRoot();
     }
 

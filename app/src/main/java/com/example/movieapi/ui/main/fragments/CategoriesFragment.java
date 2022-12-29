@@ -37,32 +37,19 @@ public class CategoriesFragment extends Fragment {
     private GridLayoutManager gridLayoutManager;
     Credentials.LoadingDialog loadingDialog;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
     public CategoriesFragment() {
         // Required empty public constructor
     }
 
     public static CategoriesFragment newInstance(String param1, String param2) {
         CategoriesFragment fragment = new CategoriesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        loadingDialog = new Credentials.LoadingDialog(getActivity());
     }
 
     @Override
@@ -77,16 +64,13 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadingDialog = new Credentials.LoadingDialog(getActivity());
         gridLayoutManager = new GridLayoutManager(requireContext(), getResources().getInteger(R.integer.grid_column_count));
         movieViewModel = new ViewModelProvider(requireActivity()).get(MovieViewModel.class);
 
         movieViewModel.getSelectedCategory().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                loadingDialog.showDialog();
                 if (!Credentials.isConnected(getActivity())) {
-                    loadingDialog.HideDialog();
                     new AlertDialog.Builder(getActivity())
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setTitle("Internet Connection Alert")
@@ -96,6 +80,8 @@ public class CategoriesFragment extends Fragment {
                             }).show();
                 } else {
                     loadMovies(integer);
+                    loadingDialog.HideDialog();
+
                 }
             }
         });
@@ -106,10 +92,15 @@ public class CategoriesFragment extends Fragment {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         gridLayoutManager.setSpanCount(getResources().getInteger(R.integer.grid_column_count));
+        if (loadingDialog.isShowing()){
+            loadingDialog.HideDialog();
+        }
+
 
     }
 
     private void loadMovies(Integer genreId) {
+        loadingDialog.showDialog();
         movieViewModel.discoverMovies(genreId);
         movieViewModel.getDiscoverMoviesLiveData().observe(getViewLifecycleOwner(), new Observer<MoviesResponse>() {
             @Override
@@ -138,5 +129,6 @@ public class CategoriesFragment extends Fragment {
             });
         }
     }
+
 
 }

@@ -87,6 +87,10 @@ public class Credentials {
             dialog.show();
         }
 
+        public boolean isShowing(){
+             return dialog.isShowing();
+        }
+
         public void HideDialog() {
             dialog.dismiss();
         }

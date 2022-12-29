@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -41,22 +42,12 @@ public class AllFragment extends Fragment {
     public static final String UPCOMING_LIST_KEY = "upcoming";
     public static final String TOP_RATED_LIST_KEY = "top-rated";
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
     public AllFragment() {
         // Required empty public constructor
     }
 
     public static AllFragment newInstance(String param1, String param2) {
         AllFragment fragment = new AllFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -64,10 +55,7 @@ public class AllFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        loadingDialog=new Credentials.LoadingDialog(getActivity());
     }
 
     private void loadMovies(MoviesResponse moviesResponse, RecyclerView recyclerView) {
@@ -142,10 +130,7 @@ public class AllFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        loadingDialog=new Credentials.LoadingDialog(getActivity());
-        loadingDialog.showDialog();
         if (!Credentials.isConnected(requireActivity())){
-            loadingDialog.HideDialog();
             new AlertDialog.Builder(getActivity())
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("Internet Connection Alert")
@@ -155,10 +140,13 @@ public class AllFragment extends Fragment {
                     }).show();
         }else{
             loadAllMovies();
+            loadingDialog.HideDialog();
+
         }
     }
 
     private void loadAllMovies() {
+        loadingDialog.showDialog();
         //Get popular movies
         movieViewModel.getPopularMovies();
         movieViewModel.getPopularLiveData().observe(getViewLifecycleOwner(), moviesResponse -> {
@@ -185,5 +173,15 @@ public class AllFragment extends Fragment {
         });
 
     }
+
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (loadingDialog.isShowing()){
+            loadingDialog.HideDialog();
+        }
+    }
+
 
 }

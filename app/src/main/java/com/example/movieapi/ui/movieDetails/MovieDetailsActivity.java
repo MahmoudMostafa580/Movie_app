@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -57,13 +59,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
             onBackPressed();
         });
 
-        loadingDialog.showDialog();
         Intent intent = getIntent();
         if (intent.hasExtra("MOVIE_ID")) {
             movieId = intent.getIntExtra("MOVIE_ID", 0);
             if (movieId != 0) {
                 if (!Credentials.isConnected(this)) {
-                    loadingDialog.HideDialog();
                     new AlertDialog.Builder(this)
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setTitle("Internet Connection Alert")
@@ -73,6 +73,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                             }).show();
                 } else {
                     loadMovieDetails(movieId);
+                    loadingDialog.HideDialog();
                 }
             } else {
                 Toast.makeText(this, "Can't load movie details!", Toast.LENGTH_SHORT).show();
@@ -106,6 +107,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
 
     private void loadMovieDetails(int movieId) {
+        loadingDialog.showDialog();
         movieViewModel.getMovieDetails(movieId);
         movieViewModel.checkIsFavorite(movieId);
         movieViewModel.getDetailsLiveData().observe(this, new Observer<MovieModel>() {
@@ -174,7 +176,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     public void onItemClick(int position) {
                         int mPosition = list.get(position).getId();
                         Intent intent = new Intent(MovieDetailsActivity.this, MovieDetailsActivity.class);
-                        intent.putExtra("MOVIE_POSITION", mPosition);
+                        intent.putExtra("MOVIE_ID", mPosition);
                         startActivity(intent);
                     }
                 });
@@ -182,4 +184,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (loadingDialog.isShowing()){
+            loadingDialog.HideDialog();
+        }
+    }
 }

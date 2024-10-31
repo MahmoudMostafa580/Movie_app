@@ -1,15 +1,15 @@
 ![Home Screen](https://user-images.githubusercontent.com/71029821/209985310-dc3da4a8-f0a0-44c9-ba31-5e7fad9cd015.jpg)
 
 # Movie Discovery
-This is android application that uses Restful API with java programming language to get movies from TMDB API.
+This is android application that uses Restful API with Java programming language to get movies from TMDB API.
 # Platform
 * Android
 # Features
 * Login & Register
 * Popular movies
 * Upcoming movies
-* Top rated movies
-* Details for every movies.
+* Top-rated movies
+* Details for every movie.
   - poster image
   - title
   - release date
@@ -17,13 +17,13 @@ This is android application that uses Restful API with java programming language
   - runtime
   - genres
   - overview
-  - cast of movie
+  - cast of the movie
   - similar movies
 * Search movies by genres (Action, Comedy, Drama, Adventure, etc..).
 * Search movies by title.
 * Browse production companies
-* Show all movies for specific company
-* Add any movie to favorite list
+* Show all movies for a specific company
+* Add any movie to your favorite list
 * Edit profile image for user
 * Edit display name
 * Edit password
@@ -31,11 +31,11 @@ This is android application that uses Restful API with java programming language
 * Android Studio
 * Firebase Authentication (for login and register)
 * Firebase Firestore (for store favorite movies)
-* Retrofit (for http requsting)
+* Retrofit (for HTTP requesting)
 * OkHttp
 * Meow bottom navigation (for navigation)
 * Glide (for image loading)
-* Splashscreen new API from google
+* Splashscreen new API from Google
 # Architecture pattern
 * MVVM (model view viewmodel)
 
